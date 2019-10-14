@@ -16,8 +16,6 @@ Sentiment analysis is a technique that uses machine learning and mathematical mo
 
 In this study, sentiment analysis was done on healthcare product reviews using several types of supervised learning classification models. Models focused exclusively on utilizing the review text data to better gauge the impact of the sentiment analysis techniques. The different models were compared to better understand their ability to analyze the product review data. The process used to undertake this study is as follows:
 
-<br>
-
 Data Exploration and Analysis
 * Analyzing the Sources of the Text Information
 * Understanding the Sentiment of the Reviews Based on the Rating
@@ -41,126 +39,6 @@ Modeling the Data
 
 
 
-
-
-```python
-%%time
-
-import math
-import re
-import warnings
-
-from IPython.display import display
-from matplotlib import pyplot as plt
-import numpy as np
-import pandas as pd
-import seaborn as sns
-import statsmodels.formula.api as smf
-from matplotlib.mlab import PCA as mlabPCA
-from sklearn.naive_bayes import BernoulliNB
-from sklearn import linear_model
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import cross_val_score
-from sklearn.metrics import mean_squared_error
-from sklearn import neighbors
-from sklearn.utils import resample
-from sklearn import tree
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import classification_report
-from sklearn.feature_selection import SelectKBest, chi2, f_classif
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import make_scorer, accuracy_score
-from sklearn.model_selection import GridSearchCV
-from sklearn import ensemble
-from sklearn.linear_model import LogisticRegression
-from sklearn.svm import SVC
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.decomposition import TruncatedSVD
-from sklearn.decomposition import KernelPCA
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import Normalizer
-from sklearn.neural_network import MLPClassifier
-
-from datetime import datetime
-from dateutil.parser import parse
-from nltk.stem.porter import PorterStemmer
-
-
-# Display preferences.
-%matplotlib inline
-pd.options.display.float_format = '{:.3f}'.format
-
-# Suppress annoying harmless error.
-warnings.filterwarnings(
-    action="ignore",
-    module="sklearn"  
-    )
-
-# Set Plot Style
-sns.set_style('white')
-```
-
-    CPU times: user 1.59 s, sys: 546 ms, total: 2.13 s
-    Wall time: 1.93 s
-
-
-
-```python
-%%time
-
-## Import Files
-
-df = pd.read_json('Health_and_Personal_Care_5.json', lines=True)
-
-```
-
-    CPU times: user 4.48 s, sys: 993 ms, total: 5.48 s
-    Wall time: 5.53 s
-
-
-
-```python
-## View Data for Cleaning
-
-#df.head(7)
-#df.dtypes
-#df.describe()
-#df.isnull().sum(axis = 0)
-#len(df)
-```
-
-
-```python
-%%time
-
-## Drop Unnecessary Columns
-
-df = df.drop(['reviewerName', 'reviewTime'] , axis=1)
-
-```
-
-    CPU times: user 107 ms, sys: 6.39 ms, total: 114 ms
-    Wall time: 115 ms
-
-
-
-```python
-%%time
-
-## Converting Helpfulness Rating to float
-
-df.helpful = df.helpful.apply(lambda x: str(x).replace('[','').replace(', ','/').replace(']',''))
-df.helpful = df.helpful.replace('0/0','0')
-df.helpful = df.helpful.apply(eval)
-
-```
-
-    CPU times: user 2.81 s, sys: 105 ms, total: 2.91 s
-    Wall time: 2.93 s
-
-
 ## Data Exploration and Analysis
 
 Dataset used for this study includes product reviews and information about the context of the reviews.
@@ -168,153 +46,12 @@ Such information includes: the time the reviews were posted, the product ID, a h
 The data being used in this study comes from the Amazon website and reflect data was collected between 1996 and 2014.
 
 
-```python
-df.head(7)
-```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>asin</th>
-      <th>helpful</th>
-      <th>overall</th>
-      <th>reviewText</th>
-      <th>reviewerID</th>
-      <th>summary</th>
-      <th>unixReviewTime</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>159985130X</td>
-      <td>1.000</td>
-      <td>5</td>
-      <td>This is a great little gadget to have around. ...</td>
-      <td>ALC5GH8CAMAI7</td>
-      <td>Handy little gadget</td>
-      <td>1294185600</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>159985130X</td>
-      <td>1.000</td>
-      <td>4</td>
-      <td>I would recommend this for a travel magnifier ...</td>
-      <td>AHKSURW85PJUE</td>
-      <td>Small &amp; may need to encourage battery</td>
-      <td>1329523200</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>159985130X</td>
-      <td>0.974</td>
-      <td>4</td>
-      <td>What I liked was the quality of the lens and t...</td>
-      <td>A38RMU1Y5TDP9</td>
-      <td>Very good but not great</td>
-      <td>1275955200</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>159985130X</td>
-      <td>0.933</td>
-      <td>4</td>
-      <td>Love the Great point light pocket magnifier!  ...</td>
-      <td>A1XZUG7DFXXOS4</td>
-      <td>great addition to your purse</td>
-      <td>1202428800</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>159985130X</td>
-      <td>1.000</td>
-      <td>5</td>
-      <td>This is very nice. You pull out on the magnifi...</td>
-      <td>A1MS3M7M7AM13X</td>
-      <td>Very nice and convenient.</td>
-      <td>1313452800</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>159985130X</td>
-      <td>0.667</td>
-      <td>5</td>
-      <td>The light comes on when the item is pulled.  T...</td>
-      <td>AXO4PQU0XG3TG</td>
-      <td>$9.99, pretty and cute</td>
-      <td>1172275200</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>159985130X</td>
-      <td>0.000</td>
-      <td>4</td>
-      <td>These are lightweight and efficient and have s...</td>
-      <td>A28X0LT2100RL1</td>
-      <td>Lightweight and efficient</td>
-      <td>1404604800</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
-```python
-len(df.asin.unique())
-```
-
-
-
-
-    18534
-
-
-
 There were reviews for 18534 different products included in this study. This means that there was an average of about 19 reviews per product.
-
-
-```python
-len(df.reviewerID.unique())
-```
-
-
-
-
-    38609
-
 
 
 There were reviews from 38609 different reviewers included in this study. This means that there was an average of about 9 reviews per reviewer.
 
 A review of a user who gave the product a 5 rating:
-
-
-```python
-list(df.query('overall == 5').reviewText)[1]
-```
-
-
 
 
     'This is very nice. You pull out on the magnifier when you want the light to come on, then slide it back in. I would recommend buying this if you need something with a light that you can easily put in your pocket or purse.'
@@ -324,23 +61,12 @@ list(df.query('overall == 5').reviewText)[1]
 A review of a user who gave the product a 4 rating:
 
 
-```python
-list(df.query('overall == 4').reviewText)[1]
-```
-
-
-
 
     "What I liked was the quality of the lens and the built in light.  Then lens had no discernable distortion anywhere.  It magnified everything evenly without the ripples and  distortion that I've seen with other low cost magnifiers.  This light is a nice touch and easy to use.  If you want it on just pull the lens out a bit.  It is focused very close to the center of what you will be look at and provides nice, even coverage.What I didn't like was the brightness (actually dimmness) of the light and where it is focused.  LEDs can be lots brighter, I know as I've seen them.  Also, the light focuses at the center of you field of view but only when the lens is too close to be focused properly.Bottom line is this is a good value for a magnifier and could have been made great with better quality control.BTW, I feel that honest, effective reviews can take the place of first-hand experiences that are lacking in online shopping. I've always appreciated the help I've received from other reviewers and work hard to return the favor as best as I can.  I hope you found this review helpful and if there was anything you thought was lacking or unclear leave a comment and I'll do what I can to fix it."
 
 
 
 A review of a user who gave the product a 3 rating:
-
-
-```python
-list(df.query('overall == 3').reviewText)[1]
-```
 
 
 
@@ -352,11 +78,6 @@ list(df.query('overall == 3').reviewText)[1]
 A review of a user who gave the product a 2 rating:
 
 
-```python
-list(df.query('overall == 2').reviewText)[1]
-```
-
-
 
 
     'Bought for my mother due her eye sight going downhill. She said she still can not read what she wants to she said her little magnifier that has a light on it is better. She said she would not recommend.'
@@ -366,18 +87,13 @@ list(df.query('overall == 2').reviewText)[1]
 A review of a user who gave the product a 1 rating:
 
 
-```python
-list(df.query('overall == 1').reviewText)[1]
-```
-
-
 
 
     'ONE STAR:The Maxell LR44 10-pack photo shows the new hologram packaging, but I received the old orange & black packaging.The batteries are stale. Lights powered by them are semi-bright, and only last a day or so.The orange & black pack rates 1-star.FIVE STARS:From the same supplier, MyBatterySupplier, I ordered the50-pack, which did come in the new hologram package, and the difference was dramatic.  Lights powered by the batteries were brilliant, and I expect them to last much longer.The new hologram pack rates 5-stars.'
 
 
 
-There seems to be a large shift in sentiment from positive to negative as product ratings change from being 4 to 3.
+There seems to be a large shift in sentiment from positive to negative as product ratings change from 4 to 3.
 
 
 ```python
@@ -403,172 +119,10 @@ The distribution of reviews skew greatly toward a 5 rating. Since reviews will b
 To prepare the data for modeling, the review text data was isolated and a new feature was engineered engineered to label the reviews as positive or negative. The review data was vectorized and the number of features was reduced using SVD and the selectKbest function.
 
 
-```python
-## Creating Outcome Variable (will move to prep stage after analysis)
-
-df['sentiment'] = np.where(df['overall'] > 3, 1, 0)
-```
-
 Reviews accompanied by a rating of 4 or higher were labeled as positive (1) and reviews of 3 and below were labeled as negative or (0).
 
 
-```python
-## Checking for Class Imbalance in the Outcome Class
-
-df.sentiment.value_counts()
-```
-
-
-
-
-    1    279801
-    0     66554
-    Name: sentiment, dtype: int64
-
-
-
-The positive reviews make a majority of the reviews while the negative reviews make the minority. Class balancing will be done so that the models won't indiscriminately predict the dominant class.
-
-
-```python
-## Separate Original Dataset into Separate DataFrames for Different Cleaning Implementations
-
-df_without_text = df.drop(['reviewText', 'summary', 'reviewerID', 'asin'], axis=1)
-df_review_text = df.reviewText
-df_review_summary = df.summary
-```
-
-
-```python
-%%time
-
-## Vectorizing Text Data
-
-porter_stemmer = PorterStemmer()
-
-def stemming_tokenizer(str_input):
-    words = re.sub(r"[^A-Za-z0-9\-]", " ", str_input).lower().split()
-    words = [porter_stemmer.stem(word) for word in words]
-    return words
-
-tfidf_vectorizer = TfidfVectorizer(stop_words='english', tokenizer=stemming_tokenizer, max_features=1000, use_idf=True)
-X = tfidf_vectorizer.fit_transform(df_review_text)
-df_review_text_vectorized = pd.DataFrame(X.toarray(), columns=tfidf_vectorizer.get_feature_names())
-
-tfidf_vectorizer = TfidfVectorizer(stop_words='english', tokenizer=stemming_tokenizer, max_features=1000, use_idf=True)
-X = tfidf_vectorizer.fit_transform(df_review_summary)
-df_review_summary_vectorized = pd.DataFrame(X.toarray(), columns=tfidf_vectorizer.get_feature_names())
-
-## Drop Unnecessary Columns
-
-df_review_text_vectorized = df_review_text_vectorized.drop(df_review_text_vectorized.columns[:26], axis=1)
-df_review_summary_vectorized = df_review_summary_vectorized.drop(df_review_summary_vectorized.columns[:18], axis=1)
-```
-
-    CPU times: user 11min 23s, sys: 7.97 s, total: 11min 31s
-    Wall time: 11min 35s
-
-
-
-```python
-%%time
-
-## Dimension reduction of Review Text DataFrame
-
-svd= TruncatedSVD(100)
-lsa = make_pipeline(svd, Normalizer(copy=False))
-df_review_text_components = lsa.fit_transform(df_review_text_vectorized)
-
-df_review_text_components = pd.DataFrame(df_review_text_components)
-
-variance_explained=svd.explained_variance_ratio_
-total_variance = variance_explained.sum()
-print("Percent variance captured by all components:",total_variance*100)
-
-```
-
-    Percent variance captured by all components: 32.763003479931506
-    CPU times: user 1min 38s, sys: 9.42 s, total: 1min 48s
-    Wall time: 35.9 s
-
-
-
-```python
-%%time
-
-## Creating DataFrame For Modeling
-
-df = pd.concat([df.sentiment, df_review_text_components], axis=1)
-```
-
-    CPU times: user 401 ms, sys: 114 ms, total: 516 ms
-    Wall time: 538 ms
-
-
-
-```python
-%%time
-
-## Class Balancing
-
-# Separate majority and minority classes
-df_majority = df[df.sentiment==1]
-df_minority = df[df.sentiment==0]
-
-# Upsample minority class
-df_minority_upsampled = resample(df_minority,
-                                 replace=True,     # sample with replacement
-                                 n_samples=150000,    # to match majority class
-                                 random_state=123) # reproducible results
-
-# Downsample majority class
-df_majority_downsampled = resample(df_majority,
-                                 replace=False,    # sample without replacement
-                                 n_samples=150000,     # to match minority class
-                                 random_state=123) # reproducible results
-
-# Combine majority class with upsampled minority class
-df = pd.concat([df_majority_downsampled, df_minority_upsampled])
-
-print(df.sentiment.value_counts())
-```
-
-    1    150000
-    0    150000
-    Name: sentiment, dtype: int64
-    CPU times: user 406 ms, sys: 261 ms, total: 667 ms
-    Wall time: 694 ms
-
-
-Class balancing was done by downsampling the majority class and upsampling the minority class.
-
-
-```python
-%%time
-
-## Establish variables based on original features to be used for modeling
-
-x = df.drop(['sentiment'], axis=1)
-y = df.sentiment
-```
-
-    CPU times: user 86.8 ms, sys: 67.4 ms, total: 154 ms
-    Wall time: 154 ms
-
-
-
-```python
-%%time
-
-## Establish variables based on select K best to be used for modeling
-
-selector = SelectKBest(f_classif, k=50)
-k_predictors = selector.fit_transform(x,y)
-```
-
-    CPU times: user 417 ms, sys: 233 ms, total: 650 ms
-    Wall time: 662 ms
-
+The positive reviews make a majority of the reviews while the negative reviews make the minority. Class balancing was done so that the models wouldn't indiscriminately predict the dominant class. The majority class was downsampled and the minority class was upsampled.
 
 
 ```python
@@ -578,10 +132,6 @@ k_predictors = selector.fit_transform(x,y)
 
 x_train, x_test, y_train, y_test = train_test_split(k_predictors, y, test_size=0.2, random_state=20)
 ```
-
-    CPU times: user 146 ms, sys: 32 ms, total: 178 ms
-    Wall time: 176 ms
-
 
 The x and y variables represent the variables to be used for training and testing the different supervised learning models.
 
@@ -1125,10 +675,3 @@ Understanding how to better utilize supervised modeling techniques to perform cu
 Being able to act on these efficiently gathered insights, could result in strategic decisionmaking that can increase product quality.
 
 This study established the best suprvised modeling technique for determining the sentiment of Amazon Reviews. The next step in using this data to gather insights from reviews would be to collect review data from different sources and use them to test the model. This would give insight as to how different types of text are percieved by the model. By being able to understand how supervised learning models can be affected by text from different contexts, the increased efficiency of sentiment analysis could result in more nuanced insights.
-
-
-
-
-```python
-
-```
