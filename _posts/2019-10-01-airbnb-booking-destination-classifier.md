@@ -59,7 +59,6 @@ The data used for this model was released by Airbnb in the following datasets: t
 
 The Airbnb data contains information about activity on the platform that occurred between January 2010 and June 2014.  The train dataset originally contained columns related to the time specific activities first occured, information about the how the user accessed Airbnb, and demographics of the users. Additional features were engineered to include the amount of time users spent doing specific activities on the platform.
 
-<br>
 
 
 ![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/airbnb-booking-destination-classifier/output_11_0.png)
@@ -67,7 +66,7 @@ The Airbnb data contains information about activity on the platform that occurre
 
 Above are plots representing the gender frequencies and age frequencies of the data, respectively. There are more females than males included in the data but the disparity between the two groups is not strong. The distribution of the ages is centered around the 30’s and skewed to the right. This likely reflects an age demographic with both the energy and resources to travel. Since both of these variables contain a large amount of null values imputation will be needed to make use of this data prior to modeling.
 
-<br>
+
 
 
 ![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/airbnb-booking-destination-classifier/output_13_0.png)
@@ -76,7 +75,7 @@ Above are plots representing the gender frequencies and age frequencies of the d
 
 Above are plots of languages used on the platform and country destination, respectively. Both plots are scaled logarithmically for readability because the dominant classes far outnumbered the rest. With regard to the language counts, English outnumbered the other classes greatly; and with regard to the country destinations, ‘NDF’ and the US outnumbered the other classes. NDF represents the class of users that haven’t booked a destination yet. Since this would be the class that the model being built would be predicting, this was not be used as an outcome variable to train the model.
 
-<br>
+
 
 
 ![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/airbnb-booking-destination-classifier/output_18_0.png)
@@ -88,48 +87,6 @@ Above are plots of languages used on the platform and country destination, respe
 
 
 The above plots refer to the frequencies the accounts were first created and frequencies bookings were made over the course of multiple years. The frequency of accounts being created showed an increasing trajectory over the course of five years, likely reflecting an increase in the userbase of Airbnb. There is a sharp drop in bookings made around the time that the data was collected. This doesn’t reflect a drop in the usage of the platform, but rather people who use the platform but haven’t made a booking yet (these customers would have the country destination label ‘NDF’).
-
-
-```python
-%%time
-
-## Graphing Seasonal Activity   
-
-fig = plt.figure(figsize=(14, 8))
-fig.subplots_adjust(hspace=.3)
-
-# Barplot of Monthly Usage
-plt.subplot(2, 2, 1)
-ax = df.month_account_created.value_counts().sort_index().plot(kind='bar',  
-
-                                    title="Frequency of Accounts Created Each Month")
-ax.set_xlabel("Month")
-ax.set_ylabel("Frequency")
-plt.xticks(rotation=80)
-
-# Barplot of Usage During Week
-plt.subplot(2, 2, 2)
-ax = df.date_account_created.apply(lambda x: x.weekday()).value_counts().sort_index().plot(kind='bar',
-                                    title="Frequency of Accounts Created Each Day of the Week")
-ax.set_xlabel("Week Day")
-ax.set_ylabel("Frequency")
-
-# Line Graph of Usage over the Year
-plt.subplot(2, 2, 3)
-ax = df.date_account_created.apply(lambda x: x.dayofyear).value_counts().sort_index().plot(kind='line',
-                                    title="Frequency of Accounts Created Each Day of the Year")
-ax.set_xlabel("Day of the Year")
-ax.set_ylabel("Frequency")
-
-# Line Graph of First Activity Over a Day (24 hour scale)
-plt.subplot(2, 2, 4)
-ax = df.hour_first_active.value_counts().sort_index().plot(kind='line',
-                                    title="Hour of Day First Active")
-ax.set_xlabel("Hour of the Day (Using 24 Hour Clock)")
-ax.set_ylabel("Frequency")
-
-plt.show()
-```
 
 
 ![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/airbnb-booking-destination-classifier/output_20_0.png)
@@ -152,13 +109,6 @@ The scatterplot matrix gives information about the relationship between specific
 The heatmap is meant to gauge the correlatedness of engineered features. There is much correlatedness among these features, which is expected since they reflect amounts of time spent on the platform.
 
 
-```python
-%%time
-
-## Descriptive Statistics
-
-df.iloc[:,30:].describe()
-```
 
 
 
@@ -331,7 +281,6 @@ df.iloc[:,30:].describe()
 </div>
 
 
-
 Data will be normalized prior to modeling to account for the vast difference in scale of the variables.
 
 ## Preparing The Data For Modeling
@@ -382,20 +331,6 @@ Mean shift returned a single cluster and was deemed unfil for analysis.
 
 Affinity propogation proved to be computationaly intensive and returned 430 groups. This was also unfit for analysis.
 
-
-```python
-%%time
-
-## K Means
-
-# Testing Multiple Numbers of Clusters
-print('Silhouette scores for K Means:\n')
-range_n_clusters = [9,10,11,12]
-for n_clusters in range_n_clusters:
-    print(str(n_clusters) + ' clusters: ' + str(silhouette_score(x_train, KMeans(n_clusters=n_clusters, random_state=42).fit_predict(x_train))))
-print('\n')
-```
-
     Silhouette scores for K Means:
 
     9 clusters: 0.25633171822577977
@@ -424,32 +359,6 @@ While clustering didn't prove to be a reliable means of separating country desti
 
 ### K Nearest Neighbors
 
-
-```python
-%%time
-
-## Train and Fit Model
-
-knn = neighbors.KNeighborsClassifier(n_neighbors=2).fit(x_train, y_train)
-
-```
-
-
-
-```python
-%%time
-
-## Model Evaluation
-
-print("accuracy score:\n" + str(knn.score(x_test, y_test))+'\n')
-
-print("cross validation:\n" + str(cross_val_score(knn, x_test, y_test, cv=5))+'\n')
-
-print("confusion matrix:\n" + str(confusion_matrix(y_test, knn.predict(x_test)))+'\n')
-
-print(classification_report(y_test, knn.predict(x_test)))
-
-```
 
     accuracy score:
     0.9134343434343435
@@ -492,43 +401,6 @@ print(classification_report(y_test, knn.predict(x_test)))
 
 ### Random Forest
 
-
-```python
-%%time
-
-## Train and Fit Model
-
-rf = ensemble.RandomForestClassifier()
-
-parameters = {
-              'max_features': ['log2', 'sqrt','auto'],
-              'max_depth': list(np.arange(85, 111, 5)),
-             }
-
-acc_scorer = make_scorer(accuracy_score)
-
-rfc = GridSearchCV(rf, parameters, scoring=acc_scorer).fit(x_train,  y_train)
-
-print(rfc.best_params_)
-```
-
-    {'max_depth': 95, 'max_features': 'sqrt'}
-
-
-```python
-%%time
-
-## Model Evaluation
-
-print("accuracy score:\n" + str(rfc.score(x_test, y_test))+'\n')
-
-print("cross validation:\n" + str(cross_val_score(rfc, x_test, y_test, cv=5))+'\n')
-
-print("confusion matrix:\n" + str(confusion_matrix(y_test, rfc.predict(x_test)))+'\n')
-
-print(classification_report(y_test, rfc.predict(x_test)))
-
-```
 
     accuracy score:
     0.9621717171717171
@@ -581,31 +453,6 @@ The models that relied on the dataset’s unreduced features, in general, had th
 ### K Nearest Neighbors
 
 
-```python
-%%time
-
-## Train and Fit Model
-
-p_knn = neighbors.KNeighborsClassifier(n_neighbors=2).fit(px_train, py_train)
-
-```
-
-
-```python
-%%time
-
-## Model Evaluation
-
-print("accuracy score:\n" + str(p_knn.score(px_test, py_test))+'\n')
-
-print("cross validation:\n" + str(cross_val_score(p_knn, px_test, py_test, cv=5))+'\n')
-
-print("confusion matrix:\n" + str(confusion_matrix(py_test, p_knn.predict(px_test)))+'\n')
-
-print(classification_report(py_test, p_knn.predict(px_test)))
-
-```
-
     accuracy score:
     0.9134848484848485
 
@@ -646,42 +493,6 @@ print(classification_report(py_test, p_knn.predict(px_test)))
 
 ### Random Forest
 
-
-```python
-%%time
-
-## Train and Fit Model
-
-parameters = {
-              'max_features': ['log2', 'sqrt','auto'],
-              'max_depth': list(np.arange(85, 111, 5)),
-             }
-
-acc_scorer = make_scorer(accuracy_score)
-
-p_rfc = GridSearchCV(rf, parameters, scoring=acc_scorer).fit(px_train, py_train)
-
-print(p_rfc.best_params_)
-
-```
-
-    {'max_depth': 90, 'max_features': 'log2'}
-
-
-```python
-%%time
-
-## Model Evaluation
-
-print("accuracy score:\n" + str(p_rfc.score(px_test, py_test))+'\n')
-
-print("cross validation:\n" + str(cross_val_score(p_rfc, px_test, py_test, cv=5))+'\n')
-
-print("confusion matrix:\n" + str(confusion_matrix(py_test, p_rfc.predict(px_test)))+'\n')
-
-print(classification_report(py_test, p_rfc.predict(px_test)))
-
-```
 
     accuracy score:
     0.9469191919191919
@@ -735,32 +546,6 @@ The accuracy scores of the models that used PCA components were only slightly lo
 ### K Nearest Neighbors
 
 
-```python
-%%time
-
-## Train and Fit Model
-
-k_knn = neighbors.KNeighborsClassifier(n_neighbors=2).fit(kx_train, ky_train)
-
-```
-
-
-
-```python
-%%time
-
-## Model Evaluation
-
-print("accuracy score:\n" + str(k_knn.score(kx_test, ky_test))+'\n')
-
-print("cross validation:\n" + str(cross_val_score(k_knn, kx_test, ky_test, cv=5))+'\n')
-
-print("confusion matrix:\n" + str(confusion_matrix(ky_test, k_knn.predict(kx_test)))+'\n')
-
-print(classification_report(ky_test, k_knn.predict(kx_test)))
-
-```
-
     accuracy score:
     0.9138383838383838
 
@@ -801,42 +586,6 @@ print(classification_report(ky_test, k_knn.predict(kx_test)))
 
 ### Random Forest
 
-
-```python
-%%time
-
-## Train and Fit Model
-
-parameters = {
-              'max_features': ['log2', 'sqrt','auto'],
-              'max_depth': list(np.arange(85, 111, 5)),
-             }
-
-acc_scorer = make_scorer(accuracy_score)
-
-k_rfc = GridSearchCV(rf, parameters, scoring=acc_scorer).fit(kx_train, ky_train)
-
-print(k_rfc.best_params_)
-
-```
-
-    {'max_depth': 95, 'max_features': 'sqrt'}
-
-
-```python
-%%time
-
-## Model Evaluation
-
-print("accuracy score:\n" + str(k_rfc.score(kx_test, ky_test))+'\n')
-
-print("cross validation:\n" + str(cross_val_score(k_rfc, kx_test, ky_test, cv=5))+'\n')
-
-print("confusion matrix:\n" + str(confusion_matrix(ky_test, k_rfc.predict(kx_test)))+'\n')
-
-print(classification_report(ky_test, k_rfc.predict(kx_test)))
-
-```
 
     accuracy score:
     0.9595454545454546
@@ -882,37 +631,10 @@ When it comes to comparing the accuracy scores of the full featured models and m
 Using selectKbest allows for computational complexity to be reduced without abstracting the individual features (unlike PCA). Even though most of the features did not need to be dropped to preserve accuracy, reducing the size of the training data proved worthwhile.
 
 
-
 ## Modeling Data using Deep Learning
 
 ### Convolutional Neural Network
 
-
-```python
-%%time
-
-## Reshaping Data
-
-X_train = X_train.reshape(X_train.shape[0], X_train.shape[1],1)
-X_test = X_test.reshape(X_test.shape[0], X_test.shape[1],1)
-
-## Building the Model
-
-model = Sequential()
-model.add(Conv1D(32, (3), input_shape=(X_train.shape[1],1), activation='relu'))
-model.add(MaxPooling1D(pool_size=2))
-model.add(Flatten())
-model.add(Dense(128, activation='relu'))
-model.add(Dense(256, activation='relu'))
-model.add(Dense(256, activation='relu'))
-model.add(Dense(len(country_names), activation='softmax'))
-
-model.compile(loss='categorical_crossentropy',
-              optimizer='Adam',
-              metrics=['accuracy'])
-
-model.summary()
-```
 
 
     _________________________________________________________________
@@ -939,36 +661,6 @@ model.summary()
 
 
 
-
-```python
-%%time
-
-## Train and Fit Model
-
-batch_size = 64
-epochs = 100
-model.fit(X_train, Y_train,
-          batch_size=batch_size,
-          epochs=epochs,
-          verbose=1,
-          validation_split=0.1)
-```
-
-
-
-```python
-# Model Evaluation
-
-pred =  model.predict_classes(X_test)
-scores = model.evaluate(X_test, Y_test, verbose=0)
-
-
-print('\nTest accuracy:', scores[1])
-
-print("\nconfusion matrix:\n" + str(confusion_matrix(pd.DataFrame(Y_test).idxmax(1), pred))+'\n')
-
-print(classification_report(pd.DataFrame(Y_test).idxmax(1), pred))
-```
 
 
     Test accuracy: 0.9083838383838384
@@ -1009,23 +701,6 @@ print(classification_report(pd.DataFrame(Y_test).idxmax(1), pred))
 ### Recurrent Neural Network
 
 
-```python
-%%time
-
-## Building the Model
-
-model = Sequential()
-model.add(LSTM(72, input_shape=(1,X_train.shape[1])))
-model.add(Dense(128, activation='relu'))
-model.add(Dense(256, activation='relu'))
-model.add(Dense(256, activation='relu'))
-model.add(Dense(len(country_names),activation="softmax"))
-
-model.compile(optimizer='Adam',loss="categorical_crossentropy",metrics=["accuracy"])
-
-model.summary()
-```
-
     _________________________________________________________________
     Layer (type)                 Output Shape              Param #   
     =================================================================
@@ -1045,34 +720,6 @@ model.summary()
     _________________________________________________________________
 
 
-
-```python
-%%time
-
-## Train and Fit Model
-
-batch_size = 64
-epochs = 100
-model.fit(X_train.reshape(X_train.shape[0],1,X_train.shape[1]), Y_train,
-          batch_size=batch_size,
-          epochs=epochs,
-          verbose=1,
-          validation_split=0.1)
-```
-
-
-```python
-# Model Evaluation
-
-pred =  model.predict_classes(X_test.reshape(X_test.shape[0],1,X_test.shape[1]))
-scores = model.evaluate(X_test.reshape(X_test.shape[0],1,X_test.shape[1]), Y_test, verbose=0)
-
-print('\nTest accuracy:', scores[1])
-
-print("\nconfusion matrix:\n" + str(confusion_matrix(pd.DataFrame(Y_test).idxmax(1), pred))+'\n')
-
-print(classification_report(pd.DataFrame(Y_test).idxmax(1), pred))
-```
 
 
     Test accuracy: 0.9223232323473151
@@ -1113,32 +760,6 @@ print(classification_report(pd.DataFrame(Y_test).idxmax(1), pred))
 ### Convolutional Neural Network with Recurrent Neural Networks
 
 
-```python
-%%time
-
-## Reshaping Data
-
-X_train = X_train.reshape(X_train.shape[0], X_train.shape[1],1)
-X_test = X_test.reshape(X_test.shape[0], X_test.shape[1],1)
-
-## Building the Model
-
-model = Sequential()
-model.add(Conv1D(32, (3), input_shape=(X_train.shape[1],1), activation='relu'))
-model.add(MaxPool1D(pool_size=2))
-model.add(LSTM(100))
-model.add(Dense(128, activation='relu'))
-model.add(Dense(256, activation='relu'))
-model.add(Dense(256, activation='relu'))
-model.add(Dense(len(country_names), activation='softmax'))
-
-model.compile(loss='categorical_crossentropy',
-              optimizer='Adam',
-              metrics=['accuracy'])
-
-model.summary()
-```
-
     _________________________________________________________________
     Layer (type)                 Output Shape              Param #   
     =================================================================
@@ -1161,37 +782,6 @@ model.summary()
     Non-trainable params: 0
     _________________________________________________________________
 
-
-
-
-```python
-%%time
-
-## Train and Fit Model
-
-batch_size = 64
-epochs = 100
-model.fit(X_train, Y_train,
-          batch_size=batch_size,
-          epochs=epochs,
-          verbose=1,
-          validation_split=0.1)
-```
-
-
-```python
-# Model Evaluation
-
-pred =  model.predict_classes(X_test)
-scores = model.evaluate(X_test, Y_test, verbose=0)
-
-
-print('\nTest accuracy:', scores[1])
-
-print("\nconfusion matrix:\n" + str(confusion_matrix(pd.DataFrame(Y_test).idxmax(1), pred))+'\n')
-
-print(classification_report(pd.DataFrame(Y_test).idxmax(1), pred))
-```
 
 
     Test accuracy: 0.8029797980038806
@@ -1240,9 +830,3 @@ This classifier created by pairing the best supervised modeling technique and fe
 
 Understanding how to better utilize supervised modeling techniques to predict booking destination, will give insight as to how people are using the Airbnb platform and particular habits different types of customers share.
 This can allow for more direct marketing to specific types of users or changes in the product that better match how the service is used. Through the use of cheap and accessible data, decisions can be made that can result in increased efficiency and revenue for the company.
-
-
-
-
-
-```
