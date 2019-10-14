@@ -14,7 +14,6 @@ Airbnb’s platform allows customers to efficiently find homes that fit their ne
 
 Several types of classification models were used to predict the first booking destination countries of Airbnb users. Models focused on using demographic and web session data to assign booking destination countries to individual users. The different models were compared by their ability to accurately and efficiently predict booking country. A final model was chosen from those that were evaluated and deemed suitable to be scaled for production. The process used to build this product is as follows:
 
-<br>
 
 Initiation and Data Preprocessing
 * Import Packages and Files
@@ -60,209 +59,7 @@ The data used for this model was released by Airbnb in the following datasets: t
 
 The Airbnb data contains information about activity on the platform that occurred between January 2010 and June 2014.  The train dataset originally contained columns related to the time specific activities first occured, information about the how the user accessed Airbnb, and demographics of the users. Additional features were engineered to include the amount of time users spent doing specific activities on the platform.
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>id</th>
-      <th>date_account_created</th>
-      <th>timestamp_first_active</th>
-      <th>date_first_booking</th>
-      <th>gender</th>
-      <th>age</th>
-      <th>signup_method</th>
-      <th>signup_flow</th>
-      <th>language</th>
-      <th>affiliate_channel</th>
-      <th>affiliate_provider</th>
-      <th>first_affiliate_tracked</th>
-      <th>signup_app</th>
-      <th>first_device_type</th>
-      <th>first_browser</th>
-      <th>country_destination</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>137021</th>
-      <td>d1mm9tcy42</td>
-      <td>2014-01-01</td>
-      <td>2014-01-01 00:09:36</td>
-      <td>2014-01-04</td>
-      <td>male</td>
-      <td>62.000</td>
-      <td>basic</td>
-      <td>0</td>
-      <td>en</td>
-      <td>sem-non-brand</td>
-      <td>google</td>
-      <td>omg</td>
-      <td>Web</td>
-      <td>Windows Desktop</td>
-      <td>Chrome</td>
-      <td>other</td>
-    </tr>
-    <tr>
-      <th>137027</th>
-      <td>xwxei6hdk4</td>
-      <td>2014-01-01</td>
-      <td>2014-01-01 00:27:42</td>
-      <td>2014-01-07</td>
-      <td>female</td>
-      <td>32.000</td>
-      <td>facebook</td>
-      <td>0</td>
-      <td>en</td>
-      <td>seo</td>
-      <td>google</td>
-      <td>linked</td>
-      <td>Web</td>
-      <td>iPad</td>
-      <td>Mobile Safari</td>
-      <td>US</td>
-    </tr>
-    <tr>
-      <th>137032</th>
-      <td>awiurksqr3</td>
-      <td>2014-01-01</td>
-      <td>2014-01-01 01:01:13</td>
-      <td>2014-01-02</td>
-      <td>female</td>
-      <td>32.000</td>
-      <td>facebook</td>
-      <td>0</td>
-      <td>en</td>
-      <td>direct</td>
-      <td>direct</td>
-      <td>untracked</td>
-      <td>Web</td>
-      <td>iPad</td>
-      <td>Mobile Safari</td>
-      <td>US</td>
-    </tr>
-    <tr>
-      <th>137036</th>
-      <td>jrqykh9y8x</td>
-      <td>2014-01-01</td>
-      <td>2014-01-01 01:19:19</td>
-      <td>2014-04-19</td>
-      <td>female</td>
-      <td>27.000</td>
-      <td>facebook</td>
-      <td>0</td>
-      <td>zh</td>
-      <td>seo</td>
-      <td>google</td>
-      <td>linked</td>
-      <td>Web</td>
-      <td>Mac Desktop</td>
-      <td>Chrome</td>
-      <td>FR</td>
-    </tr>
-    <tr>
-      <th>137037</th>
-      <td>s9xrwtyzsq</td>
-      <td>2014-01-01</td>
-      <td>2014-01-01 01:23:45</td>
-      <td>2014-01-02</td>
-      <td>male</td>
-      <td>30.000</td>
-      <td>basic</td>
-      <td>0</td>
-      <td>en</td>
-      <td>sem-brand</td>
-      <td>google</td>
-      <td>omg</td>
-      <td>Web</td>
-      <td>iPad</td>
-      <td>Mobile Safari</td>
-      <td>US</td>
-    </tr>
-    <tr>
-      <th>137048</th>
-      <td>oa8oz6sj6s</td>
-      <td>2014-01-01</td>
-      <td>2014-01-01 02:38:48</td>
-      <td>2014-02-26</td>
-      <td>male</td>
-      <td>40.000</td>
-      <td>basic</td>
-      <td>0</td>
-      <td>en</td>
-      <td>direct</td>
-      <td>direct</td>
-      <td>linked</td>
-      <td>Web</td>
-      <td>Mac Desktop</td>
-      <td>Chrome</td>
-      <td>US</td>
-    </tr>
-    <tr>
-      <th>137056</th>
-      <td>9v9pjiw5s1</td>
-      <td>2014-01-01</td>
-      <td>2014-01-01 03:53:58</td>
-      <td>2014-01-01</td>
-      <td>male</td>
-      <td>25.000</td>
-      <td>basic</td>
-      <td>0</td>
-      <td>en</td>
-      <td>sem-brand</td>
-      <td>google</td>
-      <td>linked</td>
-      <td>Web</td>
-      <td>Mac Desktop</td>
-      <td>Safari</td>
-      <td>US</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
-```python
-%%time
-
-## Graphing Gender and Age Frequencies
-
-fig = plt.figure(figsize=(14, 4))
-fig.subplots_adjust(hspace=.5)
-
-# Bar Graph of Genders
-plt.subplot(1, 2, 1)
-ax = df.gender.value_counts().plot(kind='bar',  title="Gender Frequencies")
-ax.set_xlabel("Gender")
-ax.set_ylabel("Frequency")
-
-# Histogram of Ages
-plt.subplot(1, 2, 2)
-ax = df.age.plot(kind='hist',   title="Distribution of Ages")
-ax.set_xlabel("Age")
-ax.set_ylabel("Frequency")
-
-
-plt.show()
-```
+<br>
 
 
 ![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/airbnb-booking-destination-classifier/output_11_0.png)
@@ -270,37 +67,7 @@ plt.show()
 
 Above are plots representing the gender frequencies and age frequencies of the data, respectively. There are more females than males included in the data but the disparity between the two groups is not strong. The distribution of the ages is centered around the 30’s and skewed to the right. This likely reflects an age demographic with both the energy and resources to travel. Since both of these variables contain a large amount of null values imputation will be needed to make use of this data prior to modeling.
 
-
-```python
-%%time
-
-## Graphing  Language and Country Destination Frequencies (Logarithmic Scale is Used for Readability)
-
-# Language Preferences Used (Logarithmic Scale)
-fig = plt.figure(figsize=(14, 10))
-fig.subplots_adjust(hspace=.25)
-
-plt.subplot(2, 1, 1)
-ax = df.language.value_counts().apply(math.log).head(20).plot(kind='bar',
-
-                                    title="Frequency of Language Preferences Used (Logarithmic Scale)")
-ax.set_xlabel("Language Labels")
-ax.set_ylabel("Frequency")
-plt.xticks(rotation=0)
-sns.despine()
-
-# Country Destinations (Logarithmic Scale)
-plt.subplot(2, 1, 2)
-ax = df.country_destination.value_counts().apply(math.log).plot(kind='bar',
-
-                                    title="Frequency of Country Destinations (Logarithmic Scale)")
-ax.set_xlabel("Country Destinations")
-ax.set_ylabel("Frequency")
-plt.xticks(rotation=0)
-sns.despine()
-plt.show()
-
-```
+<br>
 
 
 ![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/airbnb-booking-destination-classifier/output_13_0.png)
@@ -309,26 +76,7 @@ plt.show()
 
 Above are plots of languages used on the platform and country destination, respectively. Both plots are scaled logarithmically for readability because the dominant classes far outnumbered the rest. With regard to the language counts, English outnumbered the other classes greatly; and with regard to the country destinations, ‘NDF’ and the US outnumbered the other classes. NDF represents the class of users that haven’t booked a destination yet. Since this would be the class that the model being built would be predicting, this was not be used as an outcome variable to train the model.
 
-
-```python
-%%time
-
-## Lineplots of Initial Activities on the Platform
-
-# Frequency of Accounts Created on Spicific Dates
-fig, ax = plt.subplots()
-fig.set_size_inches(14, 5)
-df.date_account_created.value_counts().plot(kind='line', title="Date Account Created", linewidth=1.1, color='#1F618D')
-sns.despine()
-plt.show()
-
-# Frequency of First Bookings Made on Specific Dates
-fig, ax = plt.subplots()
-fig.set_size_inches(14, 5)
-df.date_first_booking.value_counts().plot(kind='line',  title="Date First Booking", linewidth=1.1, color='#1F618D')
-sns.despine()
-plt.show()
-```
+<br>
 
 
 ![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/airbnb-booking-destination-classifier/output_18_0.png)
@@ -1496,6 +1244,5 @@ This can allow for more direct marketing to specific types of users or changes i
 
 
 
-```python
 
 ```
