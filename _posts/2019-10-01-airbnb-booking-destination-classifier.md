@@ -55,251 +55,10 @@ Analysis and Conclusion
 The data used for this model was released by Airbnb in the following datasets: train_users.csv and sessions.csv. The train user dataset contains information about specific users and how they first accessed the service. This dataset has over 200000 records with each one containing information about a unique user. The train user dataset contains the outcome variable, country destination. The sessions dataset contains information about actions performed during the user’s time on the Airbnb platform. This dataset contains over 10 million records with each one reflecting a specific action performed on the platform. Multiple records on the sessions dataset can refer a single user’s actions. A dataframe was created for modeling containing features generated from both datasets.
 
 
-```python
-%%time
-
-import math
-from scipy import stats
-import re
-import warnings
-import datawig
-
-from IPython.display import display
-from matplotlib import pyplot as plt
-import numpy as np
-import pandas as pd
-import geopandas
-from shapely.geometry import Point
-import seaborn as sns
-import statsmodels.formula.api as smf
-from matplotlib.mlab import PCA as mlabPCA
-from sklearn.naive_bayes import BernoulliNB
-from sklearn import linear_model
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import cross_val_score
-from sklearn.metrics import mean_squared_error
-from sklearn import neighbors
-from sklearn.utils import resample
-from sklearn import tree
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import classification_report
-from sklearn.feature_selection import SelectKBest, chi2, f_classif
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import make_scorer, accuracy_score, r2_score
-from sklearn.model_selection import GridSearchCV
-from sklearn import ensemble
-from sklearn.linear_model import LogisticRegression
-from sklearn.decomposition import KernelPCA
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import Normalizer
-from sklearn.metrics import mean_squared_error
-from sklearn.neural_network import MLPClassifier
-from sklearn.metrics import silhouette_samples, silhouette_score
-from sklearn.cluster import KMeans
-from sklearn.cluster import MeanShift, estimate_bandwidth
-from sklearn.cluster import AffinityPropagation
-from sklearn.cluster import SpectralClustering
-
-
-import keras
-from keras.models import Model
-from keras.layers import Input, Dense, TimeDistributed
-from keras.layers import LSTM
-from keras.utils.np_utils import to_categorical
-from keras.models import Sequential
-from keras.layers import Dense,Dropout,Flatten,Conv1D, MaxPool1D, MaxPooling1D
-from keras.optimizers import RMSprop,Adam
-from keras.callbacks import ReduceLROnPlateau
-from keras.models import Sequential
-from keras import backend as K
-from keras.layers.embeddings import Embedding
-
-from datetime import datetime
-from dateutil.parser import parse
-
-
-# Display Preferences
-%matplotlib inline
-pd.options.display.float_format = '{:.3f}'.format
-
-# Suppress Warnings
-warnings.filterwarnings(action="ignore")
-
-
-# Set Plot Style
-sns.set_style('darkgrid')
-sns.color_palette("Paired")
-
-```
-
-    Using TensorFlow backend.
-
-
-    CPU times: user 3.44 s, sys: 867 ms, total: 4.3 s
-    Wall time: 4.71 s
-
-
-
-```python
-%%time
-
-## Import Files
-
-df_train = pd.read_csv('train_users_2.csv')
-df_sessions = pd.read_csv('sessions.csv')
-
-## Create DataFrame for Modeling and Analysis
-
-df = df_train
-
-```
-
-    CPU times: user 8.19 s, sys: 822 ms, total: 9.01 s
-    Wall time: 9.08 s
-
-
-
-```python
-## View Data for Cleaning
-
-#df.head(7)
-#df.dtypes
-#df.info()
-#df.describe()
-#df.iloc[:,0].nunique()
-#df.isnull().sum(axis = 0)
-#len(df)
-
-```
-
-
-```python
-%%time
-
-## Data Cleaning
-
-# Converting Unknown Gender to Null
-df['gender'] = df['gender'].map({'-unknown-': np.nan, 'FEMALE':'female', 'MALE':'male'})
-
-# Convert Extreme Ages to Null
-df[df.age < 15] = df[df.age < 15].assign(age=np.nan)
-df[df.age > 150] = df[df.age > 150].assign(age=np.nan)
-
-```
-
-    CPU times: user 124 ms, sys: 4.97 ms, total: 129 ms
-    Wall time: 131 ms
-
-
-
-```python
-%%time
-
-## Parse Columns to DateTime Format
-
-df['date_account_created'] = df['date_account_created'].apply(lambda x: pd.to_datetime(x, format='%Y-%m-%d', errors='coerce'))
-df['timestamp_first_active'] = df['timestamp_first_active'].apply(lambda x: pd.to_datetime(x, format='%Y%m%d%H%M%S', errors='coerce'))
-df['date_first_booking'] = df['date_first_booking'].apply(lambda x: pd.to_datetime(x, format='%Y-%m-%d', errors='coerce'))
-
-## Creating Features based on DateTime Columns
-
-df['year_account_created'] = df['date_account_created'].apply(lambda x: x.year)
-df['month_account_created'] = df['date_account_created'].apply(lambda x: x.month)
-df['day_account_created'] = df['date_account_created'].apply(lambda x: x.day)
-df['day_of_year_account_created'] = df['date_account_created'].apply(lambda x: x.dayofyear)
-df['timestamp_account_created'] = df['date_account_created'].apply(lambda x: x.timestamp())
-
-df['year_first_active'] = df['timestamp_first_active'].apply(lambda x: x.year)
-df['month_first_active'] = df['timestamp_first_active'].apply(lambda x: x.month)
-df['day_first_active'] = df['timestamp_first_active'].apply(lambda x: x.day)
-df['hour_first_active'] = df['timestamp_first_active'].apply(lambda x: x.hour)
-df['first_active_timestamp'] = df['timestamp_first_active'].apply(lambda x: x.timestamp())
-
-df['year_first_booking'] = df['date_first_booking'].apply(lambda x: x.year)
-df['month_first_booking'] = df['date_first_booking'].apply(lambda x: x.month)
-df['day_first_booking'] = df['date_first_booking'].apply(lambda x: x.day)
-df['hour_first_booking'] = df['date_first_booking'].apply(lambda x: x.hour)
-
-```
-
-    CPU times: user 1min 39s, sys: 1.12 s, total: 1min 41s
-    Wall time: 1min 41s
-
-
-
-```python
-%%time
-
-## Creating Features based on Sessions DataFrame
-
-df_sessions['action_detail_count'] = df_sessions.groupby([
-    'user_id','action_detail'])['action_detail'].transform('count')
-
-# Total Amount of Time Spent on Platform
-df_session_length = pd.DataFrame(df_sessions.groupby(['user_id'])['secs_elapsed'].sum())
-df_session_features = df_session_length
-
-# Counts of Specific Action Details
-num_classes = 4
-action_detail_count_classes = list(df_sessions['action_detail'].value_counts().index)[:num_classes]
-
-for value in action_detail_count_classes:
-    column = df_sessions.loc[df_sessions['action_detail'] == value][['user_id','action_detail_count']].drop_duplicates().rename(columns={'action_detail_count': value +'_count'})
-    df_session_features = pd.merge(df_session_features, column, left_on='user_id', right_on='user_id', how='left').fillna(value=0)
-
-# Time Spent on Specific Action Details
-num_classes = 10
-action_detail_time_classes = list(df_sessions['action_detail'].value_counts().index)[:num_classes]
-
-for value in action_detail_time_classes:
-    column = pd.DataFrame(df_sessions.loc[df_sessions['action_detail'] == value].groupby(['user_id'])['secs_elapsed'].sum()).rename(columns = {"secs_elapsed" : value+'_secs'})
-    df_session_features = pd.merge(df_session_features, column, left_on='user_id', right_on='user_id', how='left').fillna(value=0)
-
-```
-
-    CPU times: user 19.6 s, sys: 1.24 s, total: 20.8 s
-    Wall time: 21 s
-
-
-
-```python
-%%time
-
-## Drop -Unknown- features
-
-df_session_features = df_session_features.drop(['-unknown-_count','-unknown-_secs'],1)
-
-## Save Session Feature Names
-
-session_feature_names = list(df_session_features.columns[df_session_features.columns != 'user_id'])
-
-## Merge Session Features with Training DataFrame
-
-df = pd.merge(df, df_session_features, left_on='id', right_on='user_id', how='left').drop(['user_id'],1)
-```
-
-    CPU times: user 399 ms, sys: 116 ms, total: 514 ms
-    Wall time: 515 ms
-
 
 ## Data Exploration and Analysis
 
 The Airbnb data contains information about activity on the platform that occurred between January 2010 and June 2014.  The train dataset originally contained columns related to the time specific activities first occured, information about the how the user accessed Airbnb, and demographics of the users. Additional features were engineered to include the amount of time users spent doing specific activities on the platform.
-
-
-```python
-%%time
-
-## First Several Rows Of Original Train Dataset
-
-df.dropna().iloc[:,0:16].head(7)
-```
-
-    CPU times: user 258 ms, sys: 18.7 ms, total: 277 ms
-    Wall time: 275 ms
-
 
 
 
@@ -547,38 +306,8 @@ plt.show()
 ![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/airbnb-booking-destination-classifier/output_13_0.png)
 
 
-    CPU times: user 1.25 s, sys: 107 ms, total: 1.36 s
-    Wall time: 717 ms
-
 
 Above are plots of languages used on the platform and country destination, respectively. Both plots are scaled logarithmically for readability because the dominant classes far outnumbered the rest. With regard to the language counts, English outnumbered the other classes greatly; and with regard to the country destinations, ‘NDF’ and the US outnumbered the other classes. NDF represents the class of users that haven’t booked a destination yet. Since this would be the class that the model being built would be predicting, this was not be used as an outcome variable to train the model.
-
-
-```python
-%%time
-
-## Signup Method Frequencies Within DataFrame
-
-df.signup_method.value_counts()
-```
-
-    CPU times: user 25.5 ms, sys: 908 µs, total: 26.4 ms
-    Wall time: 25.7 ms
-
-
-
-
-
-    basic       152897
-    facebook     60008
-    google         546
-    Name: signup_method, dtype: int64
-
-
-
-
-
-The vast majority of users signed onto Airbnb through the platform itsself.
 
 
 ```python
@@ -606,11 +335,8 @@ plt.show()
 
 
 
-![png](https://github.com/donmacfoy/donmacfoy.github.io/blob/master/images/projects/airbnb-booking-destination-classifier/output_18_1.png)
+![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/airbnb-booking-destination-classifier/output_18_1.png)
 
-
-    CPU times: user 1.43 s, sys: 162 ms, total: 1.59 s
-    Wall time: 582 ms
 
 
 The above plots refer to the frequencies the accounts were first created and frequencies bookings were made over the course of multiple years. The frequency of accounts being created showed an increasing trajectory over the course of five years, likely reflecting an increase in the userbase of Airbnb. There is a sharp drop in bookings made around the time that the data was collected. This doesn’t reflect a drop in the usage of the platform, but rather people who use the platform but haven’t made a booking yet (these customers would have the country destination label ‘NDF’).
@@ -661,65 +387,19 @@ plt.show()
 ![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/airbnb-booking-destination-classifier/output_20_0.png)
 
 
-    CPU times: user 2.85 s, sys: 157 ms, total: 3.01 s
-    Wall time: 2.23 s
-
 
 The above plots reflect the frequencies use of the platform created across different timespans.
 There’s a notable drop of accounts created between June and July. Since summer is a season that is popular for travel, people are less likely to need accounts during this time (because they would’ve presumably made accounts earlier than when they would travel using the service). There is a slight drop of accounts made over the weekends as well. Initial activity drops during the day which is likely the result of people having less time during the average US workday to be on Airbnb.
 
 
 
-```python
-%%time
-
-## Creating Scatterplot Matrix with Sample of Original DataFrame
-
-# Store Samples of DataFrame for Visualization
-df_sample = df.iloc[:,30:].dropna().sample(100)
-
-# Declare Pairgrid
-g = sns.PairGrid(df_sample.dropna(), diag_sharey=False)
-
-# Scatterplot
-g.map_upper(plt.scatter, alpha=.3)
-
-# Fit Line
-g.map_lower(sns.regplot, scatter_kws=dict(alpha=0))
-
-# KDE Plot
-g.map_diag(sns.kdeplot, lw=3)
-plt.show()
-```
-
-
 ![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/airbnb-booking-destination-classifier/output_22_0.png)
-
-
-    CPU times: user 54.4 s, sys: 5.54 s, total: 59.9 s
-    Wall time: 28 s
 
 
 The scatterplot matrix gives information about the relationship between specific engineered features.
 
 
-```python
-%%time
-
-## Visualizing the Correlatedness of the Session variables
-
-fig, ax = plt.subplots(figsize=(8,5))         
-sns.heatmap(df.iloc[:,30:].dropna().sample(100).corr(), cmap='RdBu_r', center=0)
-plt.show()
-```
-
-
 ![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/airbnb-booking-destination-classifier/output_24_0.png)
-
-
-    CPU times: user 1.14 s, sys: 178 ms, total: 1.31 s
-    Wall time: 542 ms
-
 
 The heatmap is meant to gauge the correlatedness of engineered features. There is much correlatedness among these features, which is expected since they reflect amounts of time spent on the platform.
 
@@ -731,9 +411,6 @@ The heatmap is meant to gauge the correlatedness of engineered features. There i
 
 df.iloc[:,30:].describe()
 ```
-
-    CPU times: user 172 ms, sys: 25.9 ms, total: 198 ms
-    Wall time: 125 ms
 
 
 
@@ -912,264 +589,7 @@ Data will be normalized prior to modeling to account for the vast difference in 
 ## Preparing The Data For Modeling
 
 To prepare the data for modeling, values were imputed, the data was resampled to address the class imbalance in the outcome, and multiple forms of feature reduction were implemented.
-This resulted in four sets of variables: One reflecting all of the unaltered features of the dataset, one reflecting PCA components, one reflecting features chosen by the selectKbest function, and encoded for deep learning.
-
-
-```python
-%%time
-
-## Creating Modeling DataFrame
-
-# Feature Selection
-train_feature_names = ['language', 'age','gender','first_device_type',
-                               'signup_app','affiliate_provider','affiliate_channel',
-                               'month_first_active','signup_method','day_account_created',
-                               'month_account_created','country_destination']
-
-df = df[train_feature_names + session_feature_names]
-
-# Keep Records with Session Features
-df = df[df['secs_elapsed'].notnull()]
-
-print(np.array(df.columns))
-```
-
-    ['language' 'age' 'gender' 'first_device_type' 'signup_app'
-     'affiliate_provider' 'affiliate_channel' 'month_first_active'
-     'signup_method' 'day_account_created' 'month_account_created'
-     'country_destination' 'secs_elapsed' 'view_search_results_count'
-     'p3_count' 'wishlist_content_update_count' 'view_search_results_secs'
-     'p3_secs' 'wishlist_content_update_secs' 'user_profile_secs'
-     'change_trip_characteristics_secs' 'similar_listings_secs'
-     'user_social_connections_secs' 'update_listing_secs'
-     'listing_reviews_secs']
-    CPU times: user 37.6 ms, sys: 15.1 ms, total: 52.6 ms
-    Wall time: 51.1 ms
-
-
-
-```python
-%%time
-
-## Impute Ages with Group Means
-
-df['age'] = df.groupby([ 'signup_method','country_destination', 'first_device_type'])['age'].transform(lambda x: x.fillna(x.mean()))
-```
-
-    CPU times: user 327 ms, sys: 17 ms, total: 344 ms
-    Wall time: 346 ms
-
-
-
-```python
-%%time
-
-## Creating DataFrame for Imputation of Gender
-
-df_impute_gender = df.dropna()
-
-## Class Balancing and Resampling Imputation DataFrame for Random Forest Imputation
-
-records_per_class = 18000
-
-# Separate Majority and Minority Classes
-df_majority = df_impute_gender[df_impute_gender.gender=='female']
-df_minority = df_impute_gender[df_impute_gender.gender=='male']
-
-# Upsample Minority Class
-df_minority_upsampled = resample(df_minority,
-                                 replace=True,     
-                                 n_samples=records_per_class,    
-                                 random_state=123)
-
-# Downsample Majority Class
-df_majority_downsampled = resample(df_majority,
-                                 replace=False,    
-                                 n_samples=records_per_class,     
-                                 random_state=123)
-
-# Combine Downsampled Majority Class With Upsampled Minority Class
-df_impute_gender = pd.concat([df_majority_downsampled, df_minority_upsampled])
-
-print(df_impute_gender.gender.value_counts())
-```
-
-    female    18000
-    male      18000
-    Name: gender, dtype: int64
-    CPU times: user 96.4 ms, sys: 16.7 ms, total: 113 ms
-    Wall time: 112 ms
-
-
-
-```python
-%%time
-
-## Random Forest Imputation
-
-# Create Gender Column for Imputation Using Random Forests
-x = pd.get_dummies(df_impute_gender.drop(['gender', 'age','signup_method','affiliate_channel','first_device_type','signup_app','affiliate_provider', 'language'], axis=1))
-y = df_impute_gender['gender']
-
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=20)
-
-rfc = ensemble.RandomForestClassifier().fit(x_train,  y_train)
-
-imputed_gender = rfc.predict(pd.get_dummies(df.drop(['gender', 'age','signup_method','affiliate_channel','first_device_type','signup_app','affiliate_provider', 'language'],1)))
-
-# Imputing Gender with Predicted Values
-df['gender'] = np.where(df['gender'].isnull(), imputed_gender, df['gender'])
-
-# Shedding Remaining Null Values
-df = df.dropna()
-```
-
-    CPU times: user 922 ms, sys: 49 ms, total: 971 ms
-    Wall time: 974 ms
-
-
-
-```python
-%%time
-
-## Class Balancing and Resampling of Training DataFrame
-
-country_names = df.country_destination.unique()[df.country_destination.unique() != 'NDF']
-records_per_class = 9000
-
-df_resampled = pd.DataFrame()
-for country in country_names:
-    if len(df[df['country_destination'] == country]) >= records_per_class:
-        df_resample_1 = df[df['country_destination'] == country]
-        df_resample_1 = resample(df_resample_1, replace=False, n_samples=records_per_class, random_state=123)
-        df_resampled = df_resampled.append(df_resample_1)
-    else:
-        df_resample_2 = df[df['country_destination'] == country]
-        df_resample_2 = resample(df_resample_2, replace=True, n_samples=records_per_class, random_state=123)
-        df_resampled = df_resampled.append(df_resample_2)
-
-
-print(df_resampled.country_destination.value_counts())
-```
-
-    AU       9000
-    PT       9000
-    FR       9000
-    NL       9000
-    ES       9000
-    IT       9000
-    GB       9000
-    other    9000
-    CA       9000
-    DE       9000
-    US       9000
-    Name: country_destination, dtype: int64
-    CPU times: user 384 ms, sys: 84.9 ms, total: 469 ms
-    Wall time: 470 ms
-
-
-
-```python
-%%time
-
-## Establish DataFrame to be Used for Modeling
-
-df = df_resampled
-
-# Get Dummies so Categorical Variables Can be Used in Classification
-df = pd.get_dummies(df.drop(['country_destination'], axis=1))
-
-# Display New Number of Features
-print('Number of Features: '+ str(len(df.columns)))
-
-```
-
-    Number of Features: 75
-    CPU times: user 96.4 ms, sys: 29 ms, total: 125 ms
-    Wall time: 124 ms
-
-
-
-```python
-%%time
-
-## Normalize DataFrame
-
-df = ((df-df.min())/(df.max()-df.min()))
-
-## Creating a Numeric Version of the Outcome Variable
-
-df_resampled['country_destination_categorical'] = df_resampled['country_destination'].astype('category').cat.codes
-
-```
-
-    CPU times: user 328 ms, sys: 169 ms, total: 497 ms
-    Wall time: 496 ms
-
-
-
-```python
-%%time
-
-## Establish Feature and Outcome Variables to be Used for Modeling Based on Original Features
-
-x = df
-y = df_resampled['country_destination']
-
-# This is a Version of the Outcome Variable Encoded for Deep Learning
-Y = keras.utils.to_categorical(df_resampled['country_destination_categorical'], len(country_names))
-
-```
-
-    CPU times: user 2.84 ms, sys: 1.89 ms, total: 4.73 ms
-    Wall time: 2.86 ms
-
-
-
-```python
-%%time
-
-## PCA
-
-# Normalize the Data for PCA
-X = StandardScaler().fit_transform(x)
-
-# Perform PCA
-sklearn_pca = PCA(n_components=15)
-Y_sklearn = sklearn_pca.fit_transform(X)
-
-# Turn PCA Result into a Dataframe
-pca_components = pd.DataFrame(data=Y_sklearn)
-
-print(
-    'The percentage of total variance in the dataset explained by each',
-    'component from Sklearn PCA.\n',
-    sklearn_pca.explained_variance_ratio_
-)
-
-```
-
-    The percentage of total variance in the dataset explained by each component from Sklearn PCA.
-     [0.06670299 0.05382638 0.04211878 0.03175155 0.03026788 0.02698215
-     0.02641819 0.02428458 0.02173672 0.02109345 0.02058062 0.01807279
-     0.01559654 0.0151019  0.01473852]
-    CPU times: user 3 s, sys: 771 ms, total: 3.77 s
-    Wall time: 791 ms
-
-
-
-```python
-%%time
-
-## Establish variables based on select K best to be used for modeling
-
-selector = SelectKBest(f_classif, k=60)
-k_predictors = selector.fit_transform(x,y)
-
-```
-
-    CPU times: user 196 ms, sys: 70.6 ms, total: 267 ms
-    Wall time: 268 ms
+This resulted in four sets of variables: One reflecting all of the unaltered features of the dataset, one reflecting PCA components, one reflecting features chosen by the selectKbest function, and one encoded for deep learning.
 
 
 
@@ -1192,9 +612,6 @@ X_train, X_test, Y_train, Y_test = train_test_split(np.asarray(x), np.asarray(Y)
 
 ```
 
-    CPU times: user 201 ms, sys: 92.4 ms, total: 294 ms
-    Wall time: 294 ms
-
 
 Training and testing sets of four variables were generated to be used in modeling.
 The x and y variables represent the variables to be used for modeling that reflect the all of the useful features of the data.
@@ -1211,58 +628,8 @@ Clustering was done on the unaltered features. Country destination labels were d
 Three methods of clustering were attempted: mean shift, affinity propogation, and k means. The appropriate clustering method was selected based on the number of clusters generated by a particular method and sillhouette scores.
 
 
-```python
-%%time
-
-## Mean Shift
-
-bandwidth = 2*estimate_bandwidth(x_train, quantile=0.2, n_samples=500)
-
-# Declare and Fit the Model
-ms = MeanShift(bandwidth=bandwidth, bin_seeding=True)
-ms.fit(x_train)
-
-# Extract Cluster Assignments for Each Data Point
-labels = ms.labels_
-
-# Coordinates of the Cluster Centers
-cluster_centers = ms.cluster_centers_
-
-# Count our clusters
-n_clusters_ = len(np.unique(labels))
-
-print("Number of estimated Mean Shift clusters: {}\n".format(n_clusters_))
-```
-
-    Number of estimated Mean Shift clusters: 1
-
-    CPU times: user 5.4 s, sys: 64.8 ms, total: 5.47 s
-    Wall time: 5.47 s
-
 
 Mean shift returned a single cluster and was deemed unfil for analysis.
-
-
-```python
-%%time
-
-## Affinity Propogation
-
-af = AffinityPropagation().fit(x_train.sample(10000))
-
-# Extract Cluster Assignments for Each Data Point
-labels = af.labels_
-
-# Count our Clusters
-n_clusters_ = len(np.unique(labels))
-
-print("Number of estimated Affinity Propagation clusters: {}\n".format(n_clusters_))
-```
-
-    Number of estimated Affinity Propagation clusters: 430
-
-    CPU times: user 6min 40s, sys: 6 s, total: 6min 46s
-    Wall time: 6min 50s
 
 
 Affinity propogation proved to be computationaly intensive and returned 430 groups. This was also unfit for analysis.
@@ -1289,9 +656,6 @@ print('\n')
     12 clusters: 0.2710002047276309
 
 
-    CPU times: user 9min 40s, sys: 1min 20s, total: 11min
-    Wall time: 6min 54s
-
 
 K means yielded reasonable silhouette scores for the selected numbers of groups. K means with 11 clusters (the number of classes in the outcome variable) was chosen for further analysis.
 
@@ -1300,86 +664,9 @@ K means yielded reasonable silhouette scores for the selected numbers of groups.
 K-means generated labels were compared to the original country labels to analyze the ability of K-means to group the records based on their content.
 
 
-```python
-%%time
-
-## Calculate Predicted Values.
-
-number_of_clusters = 11
-y_pred = KMeans(n_clusters=number_of_clusters, random_state=42).fit_predict(x_train)
-```
-
-    CPU times: user 9.26 s, sys: 986 ms, total: 10.2 s
-    Wall time: 4.02 s
-
-
-
-```python
-%%time
-
-## Create A Dataframe Using The Original Dataset and New Labels
-
-df_kmeans = pd.concat([x_train,y_train], axis=1)
-df_kmeans['labels'] = y_pred
-
-## Split Results by New Labels
-
-df_kmeans_list = []
-for cluster in range(number_of_clusters):
-    df_kmeans_list.append(df_kmeans.loc[df_kmeans['labels'] == cluster])
-
-```
-
-    CPU times: user 62.4 ms, sys: 18.1 ms, total: 80.5 ms
-    Wall time: 86.2 ms
-
-
-
-```python
-%%time
-
-## Create DataFrame to Graph Clusters
-
-df_kmeans_country_names = []
-for names in country_names:
-  df_kmeans_countries_per_cluster = []
-  for group in df_kmeans_list:
-    df_kmeans_countries_per_cluster.append(len(group['country_destination'].loc[group['country_destination'] == names]))
-  df_kmeans_country_names.append(df_kmeans_countries_per_cluster)
-
-cluster_names =[]
-for number in range(number_of_clusters):
-    cluster_names.append('Cluster ' + str(number))
-
-countries = {}
-for index_number in list(range(0,10)):
-    countries[country_names[index_number]] = df_kmeans_country_names[index_number]
-
-df_countries_by_cluster = pd.DataFrame(countries, index = cluster_names)
-```
-
-    CPU times: user 117 ms, sys: 3.24 ms, total: 121 ms
-    Wall time: 123 ms
-
-
-
-```python
-%%time
-
-## Bar Graph for Countries
-
-ax = df_countries_by_cluster.plot(kind='bar', title ="Countries by Cluster", figsize=(16, 8))
-ax.legend(loc='lower left', bbox_to_anchor=(1, 0.5))
-ax.set_ylabel("Frequency")
-plt.show()
-```
-
 
 ![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/airbnb-booking-destination-classifier/output_53_0.png)
 
-
-    CPU times: user 1.05 s, sys: 91.4 ms, total: 1.14 s
-    Wall time: 673 ms
 
 
 While clustering didn't prove to be a reliable means of separating country destination classes, it is worth mentioning that the sizes of the cluster and sillhouette scores imply that there is a tangible metric that k means is using to separate clusters.
