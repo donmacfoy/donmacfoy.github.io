@@ -1,7 +1,7 @@
 ---
 title: "Comprehensive Modeling Analysis: Predicting Airbnb New User Bookings"
 date: 2019-10-01
-tags: [data science, classification]
+tags: [machine learning, data science, classification]
 header:
   image: "/images/projects/airbnb-booking-destination-classifier/airbnb.jpg"
 excerpt: "This classifier uses an unsupervised-supervised modeling pipeline to  predict booking destination countries of first time AirBnB users."
@@ -453,7 +453,7 @@ The models that relied on the dataset’s unreduced features, in general, had th
 
 
 
-Similar trends existed among the models run with PCA components and the models run with unaltered features. The random forest model had the best performance out of all of the model.
+Similar trends existed among the models run with PCA components and the models run with unaltered features. The random forest model had the best performance out of all of the models run with PCA components.
 The decision tree had slightly lower scores. Notably, the K nearest neighbor model had extremely similar accuracy scores regardless of if it was run with PCA components or unaltered features. The MLP neural network run with PCA components also showed fewer signs of overfitting than the version run with unaltered features.
 
 The accuracy scores of the models that used PCA components were only slightly lower than the models that used unaltered features. Using a limited number of PCA components from the dataset likely removed some variance that was important to the predictive accuracy of the models. Using PCA components does have the advantage of reducing computational complexity and runtimes and in this case, this made up for the mild drop in accuracy of the better performing model types.
@@ -512,28 +512,6 @@ Using selectKbest allows for computational complexity to be reduced without abst
 ## Modeling Data using Deep Learning
 
 ### Recurrent Neural Network
-
-
-    _________________________________________________________________
-    Layer (type)                 Output Shape              Param #   
-    =================================================================
-    lstm_1 (LSTM)                (None, 72)                42624     
-    _________________________________________________________________
-    dense_5 (Dense)              (None, 128)               9344      
-    _________________________________________________________________
-    dense_6 (Dense)              (None, 256)               33024     
-    _________________________________________________________________
-    dense_7 (Dense)              (None, 256)               65792     
-    _________________________________________________________________
-    dense_8 (Dense)              (None, 11)                2827      
-    =================================================================
-    Total params: 153,611
-    Trainable params: 153,611
-    Non-trainable params: 0
-    _________________________________________________________________
-
-
-
 
     Test accuracy: 0.9223232323473151
 
