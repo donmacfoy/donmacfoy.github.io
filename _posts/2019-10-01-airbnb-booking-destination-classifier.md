@@ -548,7 +548,7 @@ plt.show()
 ```
 
 
-![png](output_13_0.png)
+![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/airbnb-booking-destination-classifier/output_13_0.png)
 
 
     CPU times: user 1.25 s, sys: 107 ms, total: 1.36 s
@@ -606,11 +606,11 @@ plt.show()
 ```
 
 
-![png](output_18_0.png)
+![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/airbnb-booking-destination-classifier/output_18_0.png)
 
 
 
-![png](output_18_1.png)
+![png](https://github.com/donmacfoy/donmacfoy.github.io/blob/master/images/projects/airbnb-booking-destination-classifier/output_18_1.png)
 
 
     CPU times: user 1.43 s, sys: 162 ms, total: 1.59 s
@@ -662,7 +662,7 @@ plt.show()
 ```
 
 
-![png](output_20_0.png)
+![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/airbnb-booking-destination-classifier/output_20_0.png)
 
 
     CPU times: user 2.85 s, sys: 157 ms, total: 3.01 s
@@ -697,7 +697,7 @@ plt.show()
 ```
 
 
-![png](output_22_0.png)
+![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/airbnb-booking-destination-classifier/output_22_0.png)
 
 
     CPU times: user 54.4 s, sys: 5.54 s, total: 59.9 s
@@ -718,7 +718,7 @@ plt.show()
 ```
 
 
-![png](output_24_0.png)
+![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/airbnb-booking-destination-classifier/output_24_0.png)
 
 
     CPU times: user 1.14 s, sys: 178 ms, total: 1.31 s
@@ -1379,7 +1379,7 @@ plt.show()
 ```
 
 
-![png](output_53_0.png)
+![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/airbnb-booking-destination-classifier/output_53_0.png)
 
 
     CPU times: user 1.05 s, sys: 91.4 ms, total: 1.14 s
