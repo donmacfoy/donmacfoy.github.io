@@ -508,7 +508,8 @@ ax.set_ylabel("Frequency")
 plt.show()
 ```
 
-<img src="https://github.com/donmacfoy/donmacfoy.github.io/blob/master/images/projects/airbnb-booking-destination-classifier/output_11_0.png">
+
+![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/airbnb-booking-destination-classifier/output_11_0.png)
 
 
 
