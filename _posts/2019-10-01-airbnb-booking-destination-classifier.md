@@ -1,9 +1,9 @@
 ---
 title: "AirBnB New User Bookings Classification Model"
 date: 2019-10-01
-tags: [machine learning, data science, classification]
+tags: [data science, classification]
 header:
-  image: "/images/airbnb.jpg"
+  image: "/images/projects/airbnb-booking-destination-classifier/airbnb.jpg"
 excerpt: "This classifier uses an unsupervised-supervised modeling pipeline to  predict booking destination countries of first time AirBnB users."
 ---
 
@@ -510,7 +510,6 @@ plt.show()
 
 
 ![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/airbnb-booking-destination-classifier/output_11_0.png)
-
 
 
 Above are plots representing the gender frequencies and age frequencies of the data, respectively. There are more females than males included in the data but the disparity between the two groups is not strong. The distribution of the ages is centered around the 30’s and skewed to the right. This likely reflects an age demographic with both the energy and resources to travel. Since both of these variables contain a large amount of null values imputation will be needed to make use of this data prior to modeling.
