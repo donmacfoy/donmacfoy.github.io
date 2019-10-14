@@ -140,39 +140,6 @@ The x and y variables represent the variables to be used for training and testin
 ### Naive Bayes
 
 
-```python
-%%time
-
-## train and fit model
-
-bnb = BernoulliNB().fit(x_train, y_train)
-
-
-```
-
-    CPU times: user 328 ms, sys: 56.2 ms, total: 384 ms
-    Wall time: 285 ms
-
-
-
-```python
-%%time
-
-## Model Evaluation
-
-print("accuracy score:\n" + str(bnb.score(x_test, y_test))+'\n')
-
-print("cross validation:\n" + str(cross_val_score(bnb, x_test, y_test, cv=5))+'\n')
-
-print("cross validation with AUC:\n" + str(cross_val_score(bnb, x_test, y_test, cv=5, scoring='roc_auc'))+'\n')
-
-print("confusion matrix:\n" + str(confusion_matrix(y_test, bnb.predict(x_test)))+'\n')
-
-print(classification_report(y_test, bnb.predict(x_test)))
-
-
-```
-
     accuracy score:
     0.66785
 
@@ -210,44 +177,6 @@ The model assumes that the variables are uncorrelated, which is true because the
 
 
 
-
-
-```python
-%%time
-
-## train and fit model
-
-decision_tree = tree.DecisionTreeClassifier(
-    criterion='entropy',
-    max_features=6,
-    max_depth=25,
-    ).fit(x_train, y_train)
-
-
-```
-
-    CPU times: user 4.09 s, sys: 33.6 ms, total: 4.12 s
-    Wall time: 4.12 s
-
-
-
-```python
-%%time
-
-## Model Evaluation
-
-print("accuracy score:\n" + str(decision_tree.score(x_test, y_test))+'\n')
-
-print("cross validation:\n" + str(cross_val_score(decision_tree, x_test, y_test, cv=5))+'\n')
-
-print("cross validation with AUC:\n" + str(cross_val_score(decision_tree, x_test, y_test, cv=5, scoring='roc_auc'))+'\n')
-
-print("confusion matrix:\n" + str(confusion_matrix(y_test, decision_tree.predict(x_test)))+'\n')
-
-print(classification_report(y_test, decision_tree.predict(x_test)))
-
-```
-
     accuracy score:
     0.8057333333333333
 
@@ -283,43 +212,6 @@ The model's reliance on binary divisions likely improved its ability to capture 
 ### Random Forest
 
 
-
-
-```python
-%%time
-
-## Fit and Train Model
-
-rfc = ensemble.RandomForestClassifier(
-    criterion='entropy',
-    max_features=15,
-    max_depth=100,
-    ).fit(x_train, y_train)
-
-
-```
-
-    CPU times: user 1min 1s, sys: 125 ms, total: 1min 1s
-    Wall time: 1min 1s
-
-
-
-```python
-%%time
-
-## Model Evaluation
-
-print("accuracy score:\n" + str(rfc.score(x_test, y_test))+'\n')
-
-print("cross validation:\n" + str(cross_val_score(rfc, x_test, y_test, cv=5))+'\n')
-
-print("cross validation with AUC:\n" + str(cross_val_score(rfc, x_test, y_test, cv=5, scoring='roc_auc'))+'\n')
-
-print("confusion matrix:\n" + str(confusion_matrix(y_test, rfc.predict(x_test)))+'\n')
-
-print(classification_report(y_test, rfc.predict(x_test)))
-
-```
 
     accuracy score:
     0.8415
@@ -358,38 +250,6 @@ By building on the ability of the decision tree to divide the data based on vary
 ### Logistic Regression
 
 
-
-```python
-%%time
-
-## train and fit model
-
-lr = LogisticRegression(fit_intercept=False).fit(x_train, y_train)
-
-```
-
-    CPU times: user 1.8 s, sys: 135 ms, total: 1.94 s
-    Wall time: 1.98 s
-
-
-
-```python
-%%time
-
-## Model Evaluation
-
-print("accuracy score:\n" + str(lr.score(x_test, y_test))+'\n')
-
-print("cross validation:\n" + str(cross_val_score(lr, x_test, y_test, cv=5))+'\n')
-
-print("cross validation with AUC:\n" + str(cross_val_score(lr, x_test, y_test, cv=5, scoring='roc_auc'))+'\n')
-
-print("confusion matrix:\n" + str(confusion_matrix(y_test, lr.predict(x_test)))+'\n')
-
-print(classification_report(y_test, lr.predict(x_test)))
-
-```
-
     accuracy score:
     0.7146
 
@@ -427,38 +287,6 @@ This quality is especially useful when modeling text data because there's a larg
 ## Support Vector
 
 
-
-
-```python
-%%time
-
-## train and fit model
-
-svc = SVC().fit(x_train, y_train)
-
-```
-
-    CPU times: user 1h 13min 47s, sys: 10.4 s, total: 1h 13min 57s
-    Wall time: 1h 14min 7s
-
-
-
-```python
-%%time
-
-## Model Evaluation
-
-print("accuracy score:\n" + str(svc.score(x_test, y_test))+'\n')
-
-print("cross validation:\n" + str(cross_val_score(svc, x_test, y_test, cv=5))+'\n')
-
-print("cross validation with AUC:\n" + str(cross_val_score(svc, x_test, y_test, cv=5, scoring='roc_auc'))+'\n')
-
-print("confusion matrix:\n" + str(confusion_matrix(y_test, svc.predict(x_test)))+'\n')
-
-
-```
-
     accuracy score:
     0.7168666666666667
 
@@ -476,16 +304,6 @@ print("confusion matrix:\n" + str(confusion_matrix(y_test, svc.predict(x_test)))
     Wall time: 48min 5s
 
 
-
-```python
-%%time
-
-## Classification Report
-
-print(classification_report(y_test, svc.predict(x_test)))
-
-
-```
 
                   precision    recall  f1-score   support
 
@@ -511,50 +329,6 @@ As a result, the model relies more on its cost function to reduce error.
 ### Gradient Boost
 
 
-
-```python
-%%time
-
-## train and fit model
-
-cl = ensemble.GradientBoostingClassifier()
-
-parameters = {
-              'n_estimators': list(np.arange(200, 301, 50)),
-              'max_depth': list(range(1,3)),
-              'loss': ['deviance', 'exponential']
-             }
-
-acc_scorer = make_scorer(accuracy_score)
-
-clf = GridSearchCV(cl, parameters, scoring=acc_scorer).fit(x_train,  y_train)
-
-## Show Best Parameters
-print(clf.best_params_)
-
-```
-
-    {'loss': 'deviance', 'max_depth': 2, 'n_estimators': 300}
-    CPU times: user 1h 29min 25s, sys: 32.6 s, total: 1h 29min 58s
-    Wall time: 1h 30min 6s
-
-
-
-```python
-%%time
-
-## Model Evaluation
-
-print("accuracy score:\n" + str(clf.score(x_test, y_test))+'\n')
-
-print("cross validation:\n" + str(cross_val_score(clf, x_test, y_test, cv=5))+'\n')
-
-print("cross validation with AUC:\n" + str(cross_val_score(clf, x_test, y_test, cv=5, scoring='roc_auc'))+'\n')
-
-print("confusion matrix:\n" + str(confusion_matrix(y_test, clf.predict(x_test)))+'\n')
-
-```
-
     accuracy score:
     0.71485
 
@@ -568,19 +342,6 @@ print("confusion matrix:\n" + str(confusion_matrix(y_test, clf.predict(x_test)))
     [[21886  7919]
      [ 9190 21005]]
 
-    CPU times: user 2h 29min 35s, sys: 58.2 s, total: 2h 30min 33s
-    Wall time: 2h 30min 57s
-
-
-
-```python
-%%time
-
-## Classification Report
-
-print(classification_report(y_test, clf.predict(x_test)))
-
-```
 
                   precision    recall  f1-score   support
 
@@ -591,8 +352,6 @@ print(classification_report(y_test, clf.predict(x_test)))
        macro avg       0.72      0.71      0.71     60000
     weighted avg       0.72      0.71      0.71     60000
 
-    CPU times: user 302 ms, sys: 5.64 ms, total: 307 ms
-    Wall time: 308 ms
 
 
 The gradient boost model had middling accuracy compared to the other models.
@@ -602,38 +361,6 @@ The strength of this model when it comes to making predictions using this data c
 
 ### Neural Network
 
-
-```python
-%%time
-
-## train and fit model
-
-mlp = MLPClassifier(hidden_layer_sizes=(100,)).fit(x_train, y_train)
-
-```
-
-    CPU times: user 19min 50s, sys: 2min 4s, total: 21min 54s
-    Wall time: 5min 44s
-
-
-
-```python
-%%time
-
-## Model Evaluation
-
-print("accuracy score:\n" + str(mlp.score(x_test, y_test))+'\n')
-
-print("cross validation:\n" + str(cross_val_score(mlp, x_test, y_test, cv=5))+'\n')
-
-print("cross validation with AUC:\n" + str(cross_val_score(mlp, x_test, y_test, cv=5, scoring='roc_auc'))+'\n')
-
-print("confusion matrix:\n" + str(confusion_matrix(y_test, mlp.predict(x_test)))+'\n')
-
-print(classification_report(y_test, mlp.predict(x_test)))
-
-
-```
 
     accuracy score:
     0.7371
