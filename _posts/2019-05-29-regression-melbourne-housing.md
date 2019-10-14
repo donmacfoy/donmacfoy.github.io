@@ -1,4 +1,3 @@
-
 ---
 title: "Regression Analysis: Predicting Melbourne Housing Market Prices"
 date: 2019-05-29
@@ -9,9 +8,6 @@ excerpt: "Supervised learning models predicted housing prices by utilizing multi
 ---
 
 The full code can be found [here](https://github.com/donmacfoy/Portfolio/blob/master/Regression%20Analysis%20-%20Predicting%20Melbourne%20Housing%20Market%20Prices.ipynb).
-
-
-<br>
 
 Housing prices have steadily increased over the course of the past three decades with the exception of severe economic downturns such as the economic recession of 2008.
 The housing market is not only a very strong economic indicator but it has a financial impact on anyone looking to own a home themselves.
@@ -41,282 +37,9 @@ Modeling the Data
 
 
 
-```python
-%%time
-
-import math
-import re
-import warnings
-
-from IPython.display import display
-from matplotlib import pyplot as plt
-import numpy as np
-import pandas as pd
-import seaborn as sns
-import statsmodels.formula.api as smf
-from matplotlib.mlab import PCA as mlabPCA
-from sklearn.naive_bayes import BernoulliNB
-from sklearn import linear_model
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import cross_val_score
-from sklearn.metrics import mean_squared_error
-from sklearn import neighbors
-from sklearn.utils import resample
-from sklearn import tree
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import classification_report
-from sklearn.feature_selection import SelectKBest, chi2, f_classif
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import make_scorer, accuracy_score, r2_score
-from sklearn.model_selection import GridSearchCV
-from sklearn import ensemble
-from sklearn.linear_model import LogisticRegression
-from sklearn.svm import SVC, SVR, NuSVR
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.decomposition import TruncatedSVD
-from sklearn.decomposition import KernelPCA
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import Normalizer
-from sklearn.metrics import mean_squared_error
-
-from datetime import datetime
-from dateutil.parser import parse
-from nltk.stem.porter import PorterStemmer
-
-
-# Display preferences.
-%matplotlib inline
-pd.options.display.float_format = '{:.3f}'.format
-
-# Suppress annoying harmless error.
-warnings.filterwarnings(
-    action="ignore",
-    module="sklearn"  
-    )
-
-
-# Set Plot Style
-sns.set_style('darkgrid')
-
-# Set Float Format
-#pd.options.display.float_format = '{:,.0f}'.format
-```
-
-    CPU times: user 1.6 s, sys: 461 ms, total: 2.06 s
-    Wall time: 1.6 s
-
-
-
-```python
-%%time
-
-## Define Functions
-
-# Converting to datetime
-def alt_to_datetime(x):
-    return  pd.to_datetime(x, format='%d/%m/%Y', errors='coerce')
-
-# Definine RMSE function for Model Evaluation
-def rmse(predictions, targets):
-    return np.sqrt(((predictions - targets) ** 2).mean())
-
-```
-
-    CPU times: user 5 µs, sys: 1 µs, total: 6 µs
-    Wall time: 10.3 µs
-
-
-
-```python
-%%time
-
-## Import Files
-
-df1 = pd.read_csv('MELBOURNE_HOUSE_PRICES_LESS.csv')
-df2 = pd.read_csv('Melbourne_housing_FULL.csv')
-
-```
-
-    CPU times: user 235 ms, sys: 50.4 ms, total: 285 ms
-    Wall time: 287 ms
-
-
-
-```python
-## View Data for Cleaning
-
-#df1.head(7)
-#df1.dtypes
-#df1.describe()
-#df1.isnull().sum(axis = 0)
-#len(df1)
-
-#df2.head(7)
-#df2.dtypes
-#df2.describe()
-#df2.isnull().sum(axis = 0)
-#len(df2)
-
-```
-
-
-```python
-%%time
-
-## Reorder Columns in df2
-
-df2 = df2[['Suburb',
-        'Address',
-        'Rooms',
-        'Type',
-        'Price',
-        'Method',
-        'SellerG',
-        'Date',
-        'Postcode',
-        'Regionname',
-        'Propertycount',
-        'Distance',
-        'CouncilArea',
-        'Bedroom2',
-        'Bathroom',
-        'BuildingArea']]
-
-## Make Postcodes in df2 Match Format of Postcodes in df1
-
-#df2.query('Postcode.isnull()')
-df2.loc[df2['Suburb'] == 'Fawkner Lot', 'Postcode'] = 3060
-#df2.loc[df2['Suburb'] == 'Fawkner Lot']
-df2.Postcode = df2.Postcode.apply(int)
-
-## Impute Null Price Values  in both DataFrames With Mean Price of Houses of the Relevant Number of Rooms
-
-for x in list(df1.Rooms.unique()):
-    df1.loc[df1['Rooms'] == x, 'Price'] = df1.loc[df1['Rooms'] == x].Price.fillna(df1.loc[df1['Rooms'] == x].Price.mean())
-
-for x in list(df2.Rooms.unique()):
-    df2.loc[df2['Rooms'] == x, 'Price'] = df2.loc[df2['Rooms'] == x].Price.fillna(df2.loc[df2['Rooms'] == x].Price.mean())  
-
-```
-
-    CPU times: user 215 ms, sys: 13.8 ms, total: 229 ms
-    Wall time: 228 ms
-
-
-
-```python
-### Imputing Null Values in df2
-
-## Drop Unnecessary Values
-
-df2 = df2.drop(df2.index[29483])
-df2 = df2.drop('Bedroom2', axis=1)
-
-## Imputing Regionname Values
-
-df2.iloc[18523, 9] = list(df2.loc[df2['Suburb'] == 'Footscray', 'Regionname'].mode())
-df2.iloc[26888, 9] = list(df2.loc[df2['Suburb'] == 'Camberwell', 'Regionname'].mode())
-
-
-## Imputing Regionname Values
-
-df2.iloc[18523, 10] = list(df2.loc[df2['Suburb'] == 'Footscray', 'Propertycount'].mode())
-df2.iloc[26888, 10] = list(df2.loc[df2['Suburb'] == 'Camberwell', 'Propertycount'].mode())
-
-## Imputing CouncilArea Values
-
-df2.iloc[18523, 12] = list(df2.loc[df2['Suburb'] == 'Footscray', 'CouncilArea'].mode())
-df2.iloc[26888, 12] = list(df2.loc[df2['Suburb'] == 'Camberwell', 'CouncilArea'].mode())
-
-```
-
-
-```python
-%%time
-
-## Merge the two DataFrames
-
-df = pd.concat([df1, df2])
-
-## Reset Index
-
-df.reset_index(inplace=True)
-df.drop("index",axis=1,inplace=True)
-
-```
-
-    CPU times: user 50.6 ms, sys: 13.8 ms, total: 64.4 ms
-    Wall time: 63.6 ms
-
-
-    /usr/local/lib/python3.7/site-packages/ipykernel_launcher.py:4: FutureWarning: Sorting because non-concatenation axis is not aligned. A future version
-    of pandas will change to not sort by default.
-
-    To accept the future behavior, pass 'sort=False'.
-
-    To retain the current behavior and silence the warning, pass 'sort=True'.
-
-      after removing the cwd from sys.path.
-
-
-
-```python
-### Impute Null Values in Combined DataFrame
-
-## Drop Unnecessary Values
-
-df = df.drop(df[df.Rooms > 8].index)
-df = df.drop(df.index[7452])
-
-## Impute Null Bathroom Count Values
-
-for x in list(df.Rooms.unique()):
-    df.loc[df['Rooms'] == x, 'Bathroom'] = df.loc[df['Rooms'] == x].Bathroom.fillna(df.loc[df['Rooms'] == x].Bathroom.mean())
-
-## Impute Null BuildingArea Values
-
-for x in list(df.Rooms.unique()):
-    df.loc[df['Rooms'] == x, 'BuildingArea'] = df.loc[df['Rooms'] == x].BuildingArea.fillna(df.loc[df['Rooms'] == x].BuildingArea.mean())
-
-
-```
-
-
-```python
-## Convert Date to Datetime
-
-df['Date'] = df.Date.apply(alt_to_datetime)
-
-## Convert Datetime to Float
-
-df['Date'] = df.Date.apply(lambda x: datetime.toordinal(x))
-
-## Make Postcodes Categorical
-
-df.Postcode = df.Postcode.apply(str)
-
-## Shorten Council Area Names For Readability
-
-df.CouncilArea = df.CouncilArea.apply(lambda x: str(x).replace(' City Council',''))
-
-```
-
 ## Data Exploration and Analysis
 
 Dataset used for this study includes information about home purchases in Melbourne pertaining to the homes and the circumstances in which they were sold. Such information includes: the location of the homes, the number of rooms in the homes, the type of home, the method in which the home was sold, and the seller of the home.
-
-
-```python
-%%time
-
-df.head(7)
-```
-
-    CPU times: user 863 µs, sys: 126 µs, total: 989 µs
-    Wall time: 895 µs
-
 
 
 
@@ -490,77 +213,16 @@ df.head(7)
 
 
 
-```python
-%%time
+![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/regression-melbourne-housing/output_12_0.png)
 
-## Barplot of Specific Suburbs
-
-fig = plt.figure(figsize=(14, 12))
-fig.subplots_adjust(hspace=1)
-
-plt.subplot(3, 1, 1)
-ax = df.Suburb.value_counts().head(25).plot(kind='bar',
-
-                                    title="Suburbs with the Most Homes Sold")
-ax.set_xlabel("Suburbs")
-ax.set_ylabel("Frequency")
-
-## Barplot of Specific Council Areas
-
-plt.subplot(3, 1, 2)
-ax = df.CouncilArea.value_counts().head(25).plot(kind='bar',
-
-                                    title="Council Areas with the Most Homes Sold")
-ax.set_xlabel("Council Areas")
-ax.set_ylabel("Frequency")
-
-## Barplot of Specific Postcodes
-
-plt.subplot(3, 1, 3)
-ax = df.Postcode.value_counts().head(25).plot(kind='bar',
-
-                                    title="Postcodes with the Most Homes Sold")
-ax.set_xlabel("Post Codes")
-ax.set_ylabel("Frequency")
-
-plt.show()
-```
-
-
-![png](output_12_0.png)
-
-
-    CPU times: user 2.04 s, sys: 297 ms, total: 2.34 s
-    Wall time: 1.25 s
 
 
 With the exception of the top selling areas, there is a similar amount of homes sold among the Post Codes and Suburbs with the most homes sold. There apprars to be a sharper disparity in the council areas with the homes sold which is more reflective of greater difference in size of these areas. Each of these variables result in a large number of classes with fewer datapoints in each, which may not be as useful for modeling.
 
 
-```python
-%%time
-
-## Barplot of Specific Suburbs
-
-fig = plt.figure(figsize=(14, 12))
-fig.subplots_adjust(hspace=.5)
-
-plt.subplot(3, 1, 1)
-ax = df.SellerG.value_counts().head(25).plot(kind='bar',
-
-                                    title="Top Sellers v. Number of Homes Sold")
-ax.set_xlabel("Suburbs")
-ax.set_ylabel("Sellers")
 
 
-```
-
-    CPU times: user 69.7 ms, sys: 3.43 ms, total: 73.1 ms
-    Wall time: 71.4 ms
-
-
-
-![png](output_14_1.png)
+![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/regression-melbourne-housing/output_14_1.png)
 
 
 Aside from a few top selling real estate agents, there's a large number of agents (over 400) that sold less than two thousand homes.
@@ -603,7 +265,7 @@ df.Type.value_counts()
 
 
 
-Most of the homes included in this data were houses, which outnember units and townhouses combined.
+Most of the homes included in this data were houses, which outnumber units and townhouses combined.
 
 
 ```python
@@ -628,41 +290,14 @@ df.Regionname.value_counts()
 By using the region name, the data falls into fewer, larger classes than with post codes, council areas or suburbs.
 
 
-```python
-## Plotting Histograms of Property Counts and Prices
-plt.figure(figsize=(14, 5))
-
-plt.subplot(1,2,1)
-plt.hist(df.Propertycount)
-plt.title("Distribution of Property Counts")
-plt.xlabel("Property Counts")
-plt.ylabel("Frequency")
-
-plt.subplot(1,2,2)
-plt.hist(df.Price)
-plt.title("Distribution of Prices")
-plt.xlabel("Price")
-plt.ylabel("Frequency")
-plt.show()
-```
 
 
-![png](output_22_0.png)
+![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/regression-melbourne-housing/output_22_0.png)
 
 
 The frequency of property counts show has a distribution where there are thousands of observations for most ranges and there is little prescence of outliers. These qualities make property count likely to be a useful feature when interpreting the data.
 
 The price variable, the outcome that I predicted on the other hand, showed signs of existing outliers. These outliers would be further explored and corrected prior to modeling.
-
-
-```python
-%%time
-
-df.describe()
-```
-
-    CPU times: user 105 ms, sys: 24 ms, total: 129 ms
-    Wall time: 75.3 ms
 
 
 
@@ -787,129 +422,8 @@ Extreme values could be found in the building area and property count variables.
 ## Preparing The Data For Modeling
 
 
-```python
-%%time
-
-## Establish Columns to Be Used based on Categorical Value Counts
-
-df = df[['Rooms', 'Distance', 'Propertycount', 'Type', 'Method', 'Regionname', 'CouncilArea', 'Price']]
-```
-
-    CPU times: user 10.2 ms, sys: 2.87 ms, total: 13 ms
-    Wall time: 11.3 ms
-
-
 Categorical variables that didn't have a very large number of classes were kept for the model to prevent its performance from being hampered.
 
-
-```python
-%%time
-
-## Replace extreme values
-
-up_quantiles = df.quantile(0.95)
-outliers_high = (df > df.quantile(0.95))
-df[outliers_high] = np.nan
-df.fillna(up_quantiles, inplace=True)
-```
-
-    CPU times: user 106 ms, sys: 10.8 ms, total: 117 ms
-    Wall time: 122 ms
-
-
-
-```python
-## Normalization and Linear Transformations
-
-df.Rooms = (df.Rooms - df.Rooms.min())/(df.Rooms.max() - df.Rooms.min())
-df.Distance = (df.Distance - df.Distance.min())/(df.Distance.max() - df.Distance.min())
-df.Propertycount = (df.Propertycount - df.Propertycount.min())/(df.Propertycount.max() - df.Propertycount.min())
-
-df.Price = df.Price.apply(math.log)
-```
-
-
-```python
-%%time
-
-## Get Dummies so Categorical Variables Can be Used in Regression
-
-df = pd.get_dummies(df)
-
-## Display New Number of Features
-
-print('Number of Features: '+ str(len(df.columns)))
-
-```
-
-    Number of Features: 58
-    CPU times: user 52.2 ms, sys: 9.17 ms, total: 61.3 ms
-    Wall time: 59.3 ms
-
-
-
-```python
-%%time
-
-## Establish variables based on original features to be used for modeling
-
-x = df.drop(['Price'], axis=1)
-y = df.Price
-
-```
-
-    CPU times: user 10.6 ms, sys: 4.32 ms, total: 14.9 ms
-    Wall time: 13 ms
-
-
-
-```python
-%%time
-
-## PCA
-
-# Normalize the data for PCA
-
-X = StandardScaler().fit_transform(x)
-
-# Perform PCA
-
-sklearn_pca = PCA(n_components=20)
-Y_sklearn = sklearn_pca.fit_transform(X)
-
-# Turn PCA Result into Dataframe
-
-pca_components = pd.DataFrame(data=Y_sklearn)
-
-print(
-    'The percentage of total variance in the dataset explained by each',
-    'component from Sklearn PCA.\n',
-    sklearn_pca.explained_variance_ratio_
-)
-
-```
-
-    The percentage of total variance in the dataset explained by each component from Sklearn PCA.
-     [0.05736541 0.04283042 0.04098472 0.03671223 0.03423057 0.03286944
-     0.0317343  0.02830331 0.02809266 0.02464089 0.02322692 0.02104111
-     0.02003836 0.01940198 0.01888658 0.01858406 0.01850232 0.01828263
-     0.01822392 0.0181573 ]
-    CPU times: user 3.18 s, sys: 1.12 s, total: 4.3 s
-    Wall time: 933 ms
-
-
-
-```python
-%%time
-
-## Establish variables based on select K best to be used for modeling
-
-selector = SelectKBest(f_classif, k=25)
-k_predictors = selector.fit_transform(x,y)
-```
-
-    CPU times: user 1.09 s, sys: 91.3 ms, total: 1.19 s
-    Wall time: 1.2 s
 
 
 
@@ -925,9 +439,6 @@ kx_train, kx_test, ky_train, ky_test = train_test_split(k_predictors, y, test_si
 px_train, px_test, py_train, py_test = train_test_split(pca_components, y, test_size=0.2, random_state=21)
 
 ```
-
-    CPU times: user 83.3 ms, sys: 25.1 ms, total: 108 ms
-    Wall time: 107 ms
 
 
 ## Modeling the Data using all available Features
