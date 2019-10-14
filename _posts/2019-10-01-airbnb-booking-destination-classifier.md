@@ -508,12 +508,8 @@ ax.set_ylabel("Frequency")
 plt.show()
 ```
 
+<img src="https://github.com/donmacfoy/donmacfoy.github.io/blob/master/images/projects/airbnb-booking-destination-classifier/output_11_0.png">
 
-![alt text](https://github.com/donmacfoy/donmacfoy.github.io/blob/master/images/projects/airbnb-booking-destination-classifier/output_11_0.png)
-
-
-    CPU times: user 910 ms, sys: 111 ms, total: 1.02 s
-    Wall time: 426 ms
 
 
 Above are plots representing the gender frequencies and age frequencies of the data, respectively. There are more females than males included in the data but the disparity between the two groups is not strong. The distribution of the ages is centered around the 30’s and skewed to the right. This likely reflects an age demographic with both the energy and resources to travel. Since both of these variables contain a large amount of null values imputation will be needed to make use of this data prior to modeling.
