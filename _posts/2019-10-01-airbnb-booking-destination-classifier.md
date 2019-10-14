@@ -509,7 +509,7 @@ plt.show()
 ```
 
 
-![png]("{{site.url}}{{site.baseurl}}/images/airbnb-booking-destination-classifier/output_11_0.png")
+![png](https://github.com/donmacfoy/donmacfoy.github.io/blob/master/images/projects/airbnb-booking-destination-classifier/output_11_0.png)
 
 
     CPU times: user 910 ms, sys: 111 ms, total: 1.02 s
