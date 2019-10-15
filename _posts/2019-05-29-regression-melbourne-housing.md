@@ -301,8 +301,3 @@ The gradient forest using all available features was by far the best model when 
 Understanding how to better utilize supervised modeling techniques to predict housing prices will give insight as to which factors have the most effect on the prices of homes. Information about how such trends change over time can also be gained, which will be useful in understanding the real estate market which is a major economic indicator.
 
 This study established the best suprvised modeling technique for predicting housing prices. The next step in using this data to gather insights from sales of homes would be to collect housing data from greater time spans (involving similar homes) and use them to train a model that will account for seasonality and change over time. By being able to understand how such supervised learning models can be improved with the added context of time, housing prices can be predicted even more accurately and more information can be gained about the housing market that can provide actionable insights.
-
-
-```python
-
-```
