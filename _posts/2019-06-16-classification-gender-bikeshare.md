@@ -163,60 +163,6 @@ Additional features were engineered with this information such as the distance b
       <td>1975.000</td>
       <td>1</td>
     </tr>
-    <tr>
-      <th>4</th>
-      <td>3183</td>
-      <td>Exchange Place</td>
-      <td>40.716</td>
-      <td>-74.033</td>
-      <td>3192</td>
-      <td>Liberty Light Rail</td>
-      <td>40.711</td>
-      <td>-74.056</td>
-      <td>561</td>
-      <td>2015-10-01 00:40:12</td>
-      <td>2015-10-01 00:49:33</td>
-      <td>3183</td>
-      <td>Customer</td>
-      <td>1984.000</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>3198</td>
-      <td>Heights Elevator</td>
-      <td>40.749</td>
-      <td>-74.040</td>
-      <td>3215</td>
-      <td>Central Ave</td>
-      <td>40.747</td>
-      <td>-74.049</td>
-      <td>365</td>
-      <td>2015-10-01 00:41:46</td>
-      <td>2015-10-01 00:47:51</td>
-      <td>3198</td>
-      <td>Customer</td>
-      <td>1984.000</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>3206</td>
-      <td>Hilltop</td>
-      <td>40.731</td>
-      <td>-74.058</td>
-      <td>3195</td>
-      <td>Sip Ave</td>
-      <td>40.731</td>
-      <td>-74.064</td>
-      <td>139</td>
-      <td>2015-10-01 00:43:44</td>
-      <td>2015-10-01 00:46:03</td>
-      <td>3206</td>
-      <td>Subscriber</td>
-      <td>1988.000</td>
-      <td>1</td>
-    </tr>
   </tbody>
 </table>
 </div>
