@@ -1,6 +1,6 @@
 ---
 title: "Classification and Clustering Analysis: An Analysis of Texts from the Gutenberg Corpora Using Unsupervised Feature Generation"
-date: 2019-30-07
+date: 2019-07-30
 tags: [machine learning, data science, classification, clustering, natural language processing]
 header:
   image: "/images/projects/classification-clustering-gutenberg/library.jpg"
