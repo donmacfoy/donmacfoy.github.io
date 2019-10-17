@@ -266,8 +266,7 @@ The gradient boost model had the best performance out of all of the models run w
     [0.72648411 0.70852419 0.71188499 0.72554533 0.71467114]
 
     RMSE: 0.22249309151772126
-    CPU times: user 18min 45s, sys: 8.5 s, total: 18min 53s
-    Wall time: 19min 10s
+
 
 
 
@@ -287,8 +286,6 @@ The gradient boost model had the best performance out of all of the models run w
     [0.73820231 0.72724553 0.72525356 0.74116231 0.73649944]
 
     RMSE: 0.22152464274783065
-    CPU times: user 8min 4s, sys: 3.71 s, total: 8min 8s
-    Wall time: 8min 15s
 
 
 The gradient boost model had the best performance out of all of the models run with features chosen using the selectkbest function. Cross vadidation showed some signs of overfitting with this model. The cross validation scores with this model were slightly lower than the accuracy score, but the disparity wasn't as great as it was in the gradient boost model that used the PCA components. The gradient boost model using selectkbest still had lower accuracy than the  model that used all of the available features in the dataset, implying that the majority of the dataset's available features had useful variance when it came to the gradient boost. There was no general trend when in model performance when it comes to comparing full featured models and models that used sectkbest; Some models performed better using full features, and others performed better using selectkbest.
