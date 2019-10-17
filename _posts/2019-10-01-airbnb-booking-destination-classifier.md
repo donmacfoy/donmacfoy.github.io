@@ -1,7 +1,7 @@
 ---
 title: "Comprehensive Modeling Analysis: Predicting Airbnb New User Bookings"
 date: 2019-10-01
-tags: [machine learning, data science, classification]
+tags: [machine learning, data science, classification, neural network]
 header:
   image: "/images/projects/airbnb-booking-destination-classifier/airbnb.jpg"
 excerpt: "This classifier uses an unsupervised-supervised modeling pipeline to  predict booking destination countries of first time AirBnB users."
