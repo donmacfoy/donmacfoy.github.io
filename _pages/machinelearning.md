@@ -1,6 +1,6 @@
 ---
 layout: archive
-permalink: /machinelearning/
+permalink: /tage/
 title: "Machine Learning Posts by Tags"
 author_profile: true
 header:
