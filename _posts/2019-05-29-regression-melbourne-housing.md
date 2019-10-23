@@ -7,7 +7,7 @@ header:
 excerpt: "Supervised learning models predicted housing prices by utilizing multiple housing price indicators."
 ---
 
-The full code can be found [here](https://github.com/donmacfoy/Portfolio/blob/master/regression-melbourne-housing.ipynb).
+The full code can be found [here](https://colab.research.google.com/drive/1gnWyBSlIkoKCc9R_VujD-VlE9mMzLdE9).
 
 Housing prices have steadily increased over the course of the past three decades with the exception of severe economic downturns such as the economic recession of 2008.
 The housing market is not only a very strong economic indicator but it has a financial impact on anyone looking to own a home themselves.
