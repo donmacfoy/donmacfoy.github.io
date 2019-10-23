@@ -7,7 +7,7 @@ header:
 excerpt: "Classification and clustering techniques were used to label excerpts from various texts according to their author."
 ---
 
-The full code can be found [here](https://github.com/donmacfoy/Portfolio/blob/master/An%20Analysis%20of%20The%20Abilities%20of%20Unsupervised%20Learning%20Techniques%20To%20Classify%20Texts%20From%20The%20Gutenberg%20Corpora.ipynb).
+The full code can be found [here](https://colab.research.google.com/drive/17BSJO_rZEW1_opqzV9BBx2rMVhOpM6yx).
 
 
 Natural Language Processing (NLP) allows for the large scale analysis of subjective human language using machine learning.
