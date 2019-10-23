@@ -7,7 +7,7 @@ header:
 excerpt: "Sentiment analysis was conducted to quantitatively judge subjective amazon reviews as positive or negative."
 ---
 
-The full code can be found [here](https://github.com/donmacfoy/Portfolio/blob/master/sentiment-analysis-amazon-products.ipynb).
+The full code can be found [here](https://colab.research.google.com/drive/14Mw06bKF0Cn0yZ8Et0lL6wf9FZNKeIW3).
 
 
 
