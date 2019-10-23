@@ -7,7 +7,7 @@ header:
 excerpt: "Supervised learning techniques were used to model bikeshare data and predict the gender of NYC Citi Bike users."
 ---
 
-The full code can be found [here](https://github.com/donmacfoy/Portfolio/blob/master/Classification%20Analysis%20-%20Predicting%20the%20Gender%20of%20Bikeshare%20Users.ipynb).
+The full code can be found [here](https://colab.research.google.com/drive/17HSTvl-Fy_fveg5YZkZMhdNFrnvCcTxk).
 
 
 Bike-sharing services offer a means for people to quickly access affordable, short term transportation in urban areas.
