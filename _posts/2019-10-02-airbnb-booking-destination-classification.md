@@ -1,5 +1,5 @@
 ---
-title: "Updated Comprehensive Modeling Analysis: Predicting Airbnb New User Bookings"
+title: "Comprehensive Modeling Analysis: Predicting Airbnb New User Bookings"
 date: 2019-10-02
 tags: [machine learning, data science, classification, neural network]
 header:
@@ -376,8 +376,6 @@ X_train, X_test, Y_train, Y_test = train_test_split(np.asarray(f_pca_components)
 
 ```
 
-    CPU times: user 172 ms, sys: 64.7 ms, total: 237 ms
-    Wall time: 161 ms
 
 
 Training and testing sets of four variables were generated to be used in modeling.
