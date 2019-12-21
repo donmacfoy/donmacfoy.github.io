@@ -216,40 +216,40 @@ Overall, clustering using K-means was reliably able to differentiate the text sa
 
 
 
-accuracy score:
-0.9565217391304348
+    accuracy score:
+    0.9565217391304348
 
-cross validation:
-[0.93548387 0.95394737 0.95364238 0.95364238 0.97972973]
+    cross validation:
+    [0.93548387 0.95394737 0.95364238 0.95364238 0.97972973]
 
-confusion matrix:
-[[34  0  0  0  0  0  0  0  0  0]
- [ 0 25  0  0  0  0  0  1  0  0]
- [ 0  0 20  0  0  0  0  0  0  0]
- [ 0  0  0 24  0  0  1  0  0  0]
- [ 0  0  0  0 21  0  0  0  0  0]
- [ 0  0  0  0  0 17  0  0  0  0]
- [ 0  0  0  0  0  0 16  0  0  0]
- [ 0  1  0  0  0  0  1 32  0  1]
- [ 0  0  0  0  0  0  0  0 27  0]
- [ 0  0  0  0  3  0  2  1  0 26]]
+    confusion matrix:
+    [[34  0  0  0  0  0  0  0  0  0]
+    [ 0 25  0  0  0  0  0  1  0  0]
+    [ 0  0 20  0  0  0  0  0  0  0]
+    [ 0  0  0 24  0  0  1  0  0  0]
+    [ 0  0  0  0 21  0  0  0  0  0]
+    [ 0  0  0  0  0 17  0  0  0  0]
+    [ 0  0  0  0  0  0 16  0  0  0]
+    [ 0  1  0  0  0  0  1 32  0  1]
+    [ 0  0  0  0  0  0  0  0 27  0]
+    [ 0  0  0  0  3  0  2  1  0 26]]
 
               precision    recall  f1-score   support
 
-      austen       1.00      1.00      1.00        34
-      bryant       0.96      0.96      0.96        26
-     burgess       1.00      1.00      1.00        20
-     carroll       1.00      0.96      0.98        25
-  chesterton       0.88      1.00      0.93        21
-   edgeworth       1.00      1.00      1.00        17
-    melville       0.80      1.00      0.89        16
-      milton       0.94      0.91      0.93        35
- shakespeare       1.00      1.00      1.00        27
-     whitman       0.96      0.81      0.88        32
+              austen       1.00      1.00      1.00        34
+              bryant       0.96      0.96      0.96        26
+              burgess       1.00      1.00      1.00        20
+              carroll       1.00      0.96      0.98        25
+              chesterton       0.88      1.00      0.93        21
+              edgeworth       1.00      1.00      1.00        17
+              melville       0.80      1.00      0.89        16
+              milton       0.94      0.91      0.93        35
+              shakespeare       1.00      1.00      1.00        27
+              whitman       0.96      0.81      0.88        32
 
-    accuracy                           0.96       253
-   macro avg       0.95      0.96      0.96       253
-weighted avg       0.96      0.96      0.96       253
+              accuracy                           0.96       253
+              macro avg       0.95      0.96      0.96       253
+              weighted avg       0.96      0.96      0.96       253
 
 
 
