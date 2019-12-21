@@ -7,7 +7,7 @@ header:
 excerpt: "Classification and clustering techniques were used to label excerpts from various texts according to their author."
 ---
 
-The full code can be found [here](https://colab.research.google.com/drive/17BSJO_rZEW1_opqzV9BBx2rMVhOpM6yx).
+The full code can be found [here](https://colab.research.google.com/drive/1NST9Oi9Fdy2EOG2SUsg8J02blpB47UCJ).
 
 
 Natural Language Processing (NLP) allows for the large scale analysis of subjective human language using machine learning.
@@ -216,41 +216,40 @@ Overall, clustering using K-means was reliably able to differentiate the text sa
 
 
 
-    accuracy score:
-    0.9683794466403162
+accuracy score:
+0.9565217391304348
 
-    cross validation:
-    [0.90909091 0.88461538 0.85714286 0.89795918 0.89583333]
+cross validation:
+[0.93548387 0.95394737 0.95364238 0.95364238 0.97972973]
 
-    confusion matrix:
-    [[34  0  0  0  0  0  0  0  0  0]
-     [ 0 26  0  0  0  0  0  0  0  0]
-     [ 0  0 20  0  0  0  0  0  0  0]
-     [ 0  0  0 24  0  0  1  0  0  0]
-     [ 0  0  0  0 21  0  0  0  0  0]
-     [ 0  0  0  0  0 17  0  0  0  0]
-     [ 0  0  0  0  0  0 15  0  0  1]
-     [ 0  0  0  0  0  0  1 32  0  2]
-     [ 0  0  0  0  0  0  0  0 27  0]
-     [ 0  0  0  0  1  0  1  1  0 29]]
+confusion matrix:
+[[34  0  0  0  0  0  0  0  0  0]
+ [ 0 25  0  0  0  0  0  1  0  0]
+ [ 0  0 20  0  0  0  0  0  0  0]
+ [ 0  0  0 24  0  0  1  0  0  0]
+ [ 0  0  0  0 21  0  0  0  0  0]
+ [ 0  0  0  0  0 17  0  0  0  0]
+ [ 0  0  0  0  0  0 16  0  0  0]
+ [ 0  1  0  0  0  0  1 32  0  1]
+ [ 0  0  0  0  0  0  0  0 27  0]
+ [ 0  0  0  0  3  0  2  1  0 26]]
 
-                  precision    recall  f1-score   support
+              precision    recall  f1-score   support
 
-          austen       1.00      1.00      1.00        34
-          bryant       1.00      1.00      1.00        26
-         burgess       1.00      1.00      1.00        20
-         carroll       1.00      0.96      0.98        25
-      chesterton       0.95      1.00      0.98        21
-       edgeworth       1.00      1.00      1.00        17
-        melville       0.83      0.94      0.88        16
-          milton       0.97      0.91      0.94        35
-     shakespeare       1.00      1.00      1.00        27
-         whitman       0.91      0.91      0.91        32
+      austen       1.00      1.00      1.00        34
+      bryant       0.96      0.96      0.96        26
+     burgess       1.00      1.00      1.00        20
+     carroll       1.00      0.96      0.98        25
+  chesterton       0.88      1.00      0.93        21
+   edgeworth       1.00      1.00      1.00        17
+    melville       0.80      1.00      0.89        16
+      milton       0.94      0.91      0.93        35
+ shakespeare       1.00      1.00      1.00        27
+     whitman       0.96      0.81      0.88        32
 
-        accuracy                           0.97       253
-       macro avg       0.97      0.97      0.97       253
-    weighted avg       0.97      0.97      0.97       253
-
+    accuracy                           0.96       253
+   macro avg       0.95      0.96      0.96       253
+weighted avg       0.96      0.96      0.96       253
 
 
 
@@ -274,41 +273,40 @@ Using bag of words may be advantageous in situations where texts are smaller and
 
 
 
-    accuracy score:
-    0.9604743083003953
+accuracy score:
+0.9565217391304348
 
-    cross validation:
-    [0.87272727 0.82692308 0.85714286 0.89795918 0.91666667]
+cross validation:
+[0.94193548 0.94736842 0.94701987 0.9602649  0.98648649]
 
-    confusion matrix:
-    [[34  0  0  0  0  0  0  0  0  0]
-     [ 0 26  0  0  0  0  0  0  0  0]
-     [ 0  0 20  0  0  0  0  0  0  0]
-     [ 0  0  0 25  0  0  0  0  0  0]
-     [ 0  0  0  0 21  0  0  0  0  0]
-     [ 0  0  0  0  0 17  0  0  0  0]
-     [ 0  0  0  0  0  0 15  0  0  1]
-     [ 0  0  0  0  0  0  1 32  0  2]
-     [ 0  0  0  0  0  0  0  0 27  0]
-     [ 0  1  0  0  3  0  2  0  0 26]]
+confusion matrix:
+[[34  0  0  0  0  0  0  0  0  0]
+ [ 0 26  0  0  0  0  0  0  0  0]
+ [ 0  0 20  0  0  0  0  0  0  0]
+ [ 0  0  0 25  0  0  0  0  0  0]
+ [ 0  0  0  0 21  0  0  0  0  0]
+ [ 0  0  0  0  0 17  0  0  0  0]
+ [ 0  0  0  0  0  0 14  0  0  2]
+ [ 0  0  0  0  0  0  0 33  0  2]
+ [ 0  0  0  0  0  0  0  0 27  0]
+ [ 0  0  0  0  5  0  1  1  0 25]]
 
-                  precision    recall  f1-score   support
+              precision    recall  f1-score   support
 
-          austen       1.00      1.00      1.00        34
-          bryant       0.96      1.00      0.98        26
-         burgess       1.00      1.00      1.00        20
-         carroll       1.00      1.00      1.00        25
-      chesterton       0.88      1.00      0.93        21
-       edgeworth       1.00      1.00      1.00        17
-        melville       0.83      0.94      0.88        16
-          milton       1.00      0.91      0.96        35
-     shakespeare       1.00      1.00      1.00        27
-         whitman       0.90      0.81      0.85        32
+      austen       1.00      1.00      1.00        34
+      bryant       1.00      1.00      1.00        26
+     burgess       1.00      1.00      1.00        20
+     carroll       1.00      1.00      1.00        25
+  chesterton       0.81      1.00      0.89        21
+   edgeworth       1.00      1.00      1.00        17
+    melville       0.93      0.88      0.90        16
+      milton       0.97      0.94      0.96        35
+ shakespeare       1.00      1.00      1.00        27
+     whitman       0.86      0.78      0.82        32
 
-        accuracy                           0.96       253
-       macro avg       0.96      0.97      0.96       253
-    weighted avg       0.96      0.96      0.96       253
-
+    accuracy                           0.96       253
+   macro avg       0.96      0.96      0.96       253
+weighted avg       0.96      0.96      0.96       253
 
 
 
