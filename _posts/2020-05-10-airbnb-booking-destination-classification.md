@@ -15,6 +15,7 @@ Airbnb’s platform allows customers to efficiently find homes that fit their ne
 
 Several types of classification models were used to predict the first booking destination countries of Airbnb users. Models focused on using demographic and web session data to assign booking destination countries to individual users. The different models were compared by their ability to accurately and efficiently predict booking country. A final model was chosen from those that were evaluated and deemed suitable to be scaled for production. The process used to build this product is as follows:
 
+<br>
 
 Initiation and Data Preprocessing
 * Import Packages and Files
@@ -31,23 +32,20 @@ Preparing The Data For Modeling
 * Feature Selection and Reduction
 * Establishing Variables for Training and Testing
 
-Unsupervised Clustering Analysis
-* Selecting Appropriate Clustering Method
-* Analyzing Clusters Made Using K Means
-
 Supervised Learning Models
 1. Using Unaltered Features
 2. Using Features Selected using F Values
 3. Using Features Selected using Chi Squared
-
-Deep Learning Classification Models
-1. Using Convolutional Neural Network
-2. Using Recurrent Neural Network
-3. Using Convolutional Neural Networks Paired With Recurrent Neural Networks
+4. Using Recurrent Neural Network
+5. Using Features Selected using Random Forests
 
 Analysis and Conclusion
 * Final Model Selection and Analysis
 * Conclusion and Discussion
+
+<br>
+
+The purpose of this study is to: analyze user demographics and behavioral patterns via data visualization, identify key indicators of future behavior by utilizing statistical inference and machine learning algorithms, create a machine learning model that can predict the booking destination of users that haven't made a booking yet, and use the aforementioned model to predict the future behavior of users that are currently on the platform.
 
 
 ## Initiation and Data Preprocessing
@@ -378,13 +376,8 @@ X_train, X_test, Y_train, Y_test = train_test_split(np.asarray(f_pca_components)
 
 
 
-Training and testing sets of four variables were generated to be used in modeling.
-The x and y variables represent the variables to be used for modeling that reflect the PCA components of all of the useful features of the data.
-The fx and fy variables represent the variables to be used for modeling that reflect PCA components of the features with high F values.
-The kx and ky variables represent the variables to be used for modeling that reflect PCA components of the features with high chi squared scores.
-The X and Y variables represent the variables converted to arrays to be used for deep learning.
 
-## Supervised Modeling using All Features
+## Modeling the Data using Features Chosen with Random Forests
 
 
 
@@ -392,194 +385,65 @@ The X and Y variables represent the variables converted to arrays to be used for
 
 
 
-    accuracy score:
-    0.9535858585858585
-
-    cross validation:
-    [0.93790231 0.93769333 0.93775253 0.93673044 0.93811569]
-
-    confusion matrix:
-    [[1839    0    0    0    0    0    0    0    0    0    0]
-     [   0 1855    0    0    0    0    0    0    0    0    0]
-     [   0    0 1787    0    0    0    0    0    0    0    0]
-     [   0    0    0 1814    0    0    0    0    0    0    0]
-     [   0    0    0    7 1827    0    0    0    0    7    0]
-     [   0    0    0    0    0 1782    0    0    0    0    0]
-     [   0    0    0    0    2    0 1787    0    0    0    0]
-     [   0    0    0    0    0    0    0 1794    0    0    0]
-     [   0    0    0    0    0    0    0    0 1779    0    0]
-     [   6   32   11   65  174   63   64    7    6 1021  279]
-     [   3    2    4   14   25    7   16    0    1  124 1596]]
-
-                  precision    recall  f1-score   support
-
-              AU       1.00      1.00      1.00      1839
-              CA       0.98      1.00      0.99      1855
-              DE       0.99      1.00      1.00      1787
-              ES       0.95      1.00      0.98      1814
-              FR       0.90      0.99      0.94      1841
-              GB       0.96      1.00      0.98      1782
-              IT       0.96      1.00      0.98      1789
-              NL       1.00      1.00      1.00      1794
-              PT       1.00      1.00      1.00      1779
-              US       0.89      0.59      0.71      1728
-           other       0.85      0.89      0.87      1792
-
-       micro avg       0.95      0.95      0.95     19800
-       macro avg       0.95      0.95      0.95     19800
-    weighted avg       0.95      0.95      0.95     19800
 
 
-
-The models that relied on the dataset’s unreduced features, in general, had the best accuracy in the study. An advantage of using all of the useful features is that as much meaningful variance was captured by the models as possible. A downside to this type of feature preparation that did stand out is the lack of efficiency. Since feature reduction didn’t take place with these models, their performance suffered and they had the longest runtimes. This method of feature selection also risks including features with variance that doesn’t aid in the predictive power of the models. However, this potential disadvantage didn’t hamper the model’s ability to perform well because many of the features that would noticeably have a negative effect on the models were already left out.
-
-
-
-## Modeling the Data using Features with High F-Values
-
-
-### Random Forest
-
+    Test Set Evaluation
 
     accuracy score:
-    0.9503030303030303
-
-    cross validation:
-    [0.93890046 0.93681752 0.93831681 0.93730665 0.93761051]
+    0.978989898989899
 
     confusion matrix:
-    [[1770    0    0    0    0    0    0    0    0    0    0]
-     [   0 1775    0    0    0    0    0    0    0    0    0]
-     [   0    0 1761    0    0    0    0    0    0    0    0]
-     [   0    0    0 1831    0    0    0    0    0    0    0]
-     [   0    5    0    0 1827    1    1    2    0   11    3]
-     [   0    0    0    0    0 1788    0    0    0    0    0]
-     [   0    0    0    0    0    0 1833    0    0    0    0]
-     [   0    0    0    0    0    0    0 1806    0    0    0]
-     [   0    0    0    0    0    0    0    0 1798    0    0]
-     [  10   38    9   63  164   55   75    9    2 1048  302]
-     [   0    7    2   11   40    8   11    0    0  155 1579]]
+    [[1782    0    0    0    0    0    0    0    0    0    0]
+     [   0 1702    0    0    0    0    0    0    0    0    0]
+     [   0    0 1840    0    0    0    0    0    0    0    0]
+     [   0    0    0 1858    0    0    0    0    0    0    0]
+     [   0    0    0    0 1747    0    0    0    0   12    2]
+     [   0    0    0    0    0 1749    0    0    0    0    0]
+     [   0    0    0    0    0    0 1801    0    0    0    0]
+     [   0    0    0    0    0    0    0 1840    0    0    0]
+     [   0    0    0    0    0    0    0    0 1808    0    0]
+     [   1    4    2   10   50    8    9    2    0 1630  140]
+     [   0    3    0    1    6    0    1    0    0  165 1627]]
 
                   precision    recall  f1-score   support
 
-              AU       0.99      1.00      1.00      1770
-              CA       0.97      1.00      0.99      1775
-              DE       0.99      1.00      1.00      1761
-              ES       0.96      1.00      0.98      1831
-              FR       0.90      0.99      0.94      1850
-              GB       0.97      1.00      0.98      1788
-              IT       0.95      1.00      0.98      1833
-              NL       0.99      1.00      1.00      1806
-              PT       1.00      1.00      1.00      1798
-              US       0.86      0.59      0.70      1775
-           other       0.84      0.87      0.85      1813
+              AU       1.00      1.00      1.00      1782
+              CA       1.00      1.00      1.00      1702
+              DE       1.00      1.00      1.00      1840
+              ES       0.99      1.00      1.00      1858
+              FR       0.97      0.99      0.98      1761
+              GB       1.00      1.00      1.00      1749
+              IT       0.99      1.00      1.00      1801
+              NL       1.00      1.00      1.00      1840
+              PT       1.00      1.00      1.00      1808
+              US       0.90      0.88      0.89      1856
+           other       0.92      0.90      0.91      1803
 
-       micro avg       0.95      0.95      0.95     19800
-       macro avg       0.95      0.95      0.95     19800
-    weighted avg       0.95      0.95      0.95     19800
-
-
-
-The accuracy scores of the models that used features with high F values were similar to those the models that used unaltered features. This form of feature selection likely removed features that were not vital to the predictive accuracy of the models. This form of feature selection has the advantage advantage of reducing computational complexity and runtimes and in this case, this made up lack of difference in accuracy of the better performing model types.
+        accuracy                           0.98     19800
+       macro avg       0.98      0.98      0.98     19800
+    weighted avg       0.98      0.98      0.98     19800
 
 
 
-## Modeling the Data using Features Chosen with Chi-Squared
+The model that relied on features selected using random forests had the best accuracy in the study (with a 97% test set accuracy). An advantage of using all of the useful features is that as much meaningful variance was captured by the models as possible. A downside to this type of feature preparation that did stand out is the lack of efficiency. Since feature reduction didn’t take place with these models, their performance suffered and they had the longest runtimes. However, for reporting purposes, accuracy was prioritized. This method of feature selection also risks including features with variance that doesn’t aid in the predictive power of the models. However, this potential disadvantage didn’t hamper the model’s ability to perform well because many of the features that would noticeably have a negative effect on the models were already left out.
 
+## Identifying the Most Important Features
 
-### Random Forest
+![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/airbnb-booking-destination-classifier/output_108_0.png)
 
+The above graph displays factors that contributed the most to the highly accurate predictions of booking destination. The age and the amount of time spent on the platform were the most useful factors in determining where a person was likely to book their next stay.
 
-    accuracy score:
-    0.9348989898989899
+## Generating Predictions of Current Users' Booking Destinations
 
-    cross validation:
-    [0.92552386 0.92393637 0.92386844 0.9222124  0.92194506]
+![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/airbnb-booking-destination-classifier/output_112_0.png)
 
-    confusion matrix:
-    [[1759    0    0    0    0    0    0    0    0    0    0]
-     [   0 1803    0    0    0    1    0    3    0    0    0]
-     [   0    0 1841    0    0    0    0    0    0    0    0]
-     [   0    3    0 1804    1    1    1    2    0    2    0]
-     [   3    3    1    4 1786    9    2    4    0    8    2]
-     [   0    1    8    6    1 1813    0    0    0    3    0]
-     [   2    2    3    6    0    2 1798    2    0    0    0]
-     [   0    0    0    0    0    0    0 1781    0    0    0]
-     [   0    0    0    0    0    0    0    0 1771    0    0]
-     [  14   70   35   86  198  102   90   26    6  866  307]
-     [   1   11   12   15   37   21   20    3    3  146 1489]]
+By using the most successful modeling type on the data of the users that haven't booked housing with the platform, future usage of the Airbnb platform can be predicted and analyzed. The distribution of the plot above shows that France is the most likely destination for non-US Airbnb users.
 
-                  precision    recall  f1-score   support
-
-              AU       0.99      1.00      0.99      1759
-              CA       0.95      1.00      0.97      1807
-              DE       0.97      1.00      0.98      1841
-              ES       0.94      0.99      0.97      1814
-              FR       0.88      0.98      0.93      1822
-              GB       0.93      0.99      0.96      1832
-              IT       0.94      0.99      0.97      1815
-              NL       0.98      1.00      0.99      1781
-              PT       0.99      1.00      1.00      1771
-              US       0.84      0.48      0.61      1800
-           other       0.83      0.85      0.84      1758
-
-       micro avg       0.93      0.93      0.93     19800
-       macro avg       0.93      0.93      0.93     19800
-    weighted avg       0.93      0.93      0.93     19800
-
-
-
-When it comes to comparing the accuracy scores of the full featured models and models that used features based on their chi-squared scores, most of the full featured models outperformed their counterparts. However, the significant drop in the runtimes of the models that used features with high chi-squared values does make this form of feature selection better than simply retrieving PCA components from all generated features. However feature selection based on F values also had this effect without compromising predictive accuracy.
-
-
-
-
-## Modeling Data using Deep Learning
-
-
-### Recurrent Neural Network
-
-
-    Test accuracy: 0.9169191919432746
-
-    confusion matrix:
-    [[1823    0    0    0   16    0    0    0    0    0    0]
-     [   0 1837    0    0   11    0    4    0    0    0    3]
-     [   0    0 1775    0    5    0    0    0    0    7    0]
-     [   0    7    1 1760   15    0   14    1    0   13    3]
-     [   3    4    3    3 1775    5    2    3    0   21   22]
-     [   0   11    3    2    9 1711    0   11    0   26    9]
-     [   4    2    3    8   29    7 1666    2    0   48   20]
-     [   0    0    0    0   15    0    0 1768    0   11    0]
-     [   0    0    0    0    0    0    0    0 1779    0    0]
-     [  20   68   23   64  211   52   75   35    5  815  360]
-     [   7   20    3   20   76   21   31   14    0  154 1446]]
-
-                  precision    recall  f1-score   support
-
-               0       0.98      0.99      0.99      1839
-               1       0.94      0.99      0.97      1855
-               2       0.98      0.99      0.99      1787
-               3       0.95      0.97      0.96      1814
-               4       0.82      0.96      0.89      1841
-               5       0.95      0.96      0.96      1782
-               6       0.93      0.93      0.93      1789
-               7       0.96      0.99      0.97      1794
-               8       1.00      1.00      1.00      1779
-               9       0.74      0.47      0.58      1728
-              10       0.78      0.81      0.79      1792
-
-       micro avg       0.92      0.92      0.92     19800
-       macro avg       0.91      0.91      0.91     19800
-    weighted avg       0.91      0.92      0.91     19800
-
-
-
-The convolutional neural network and recurrent neural networks were both able to reach test accuracy scores of over 90% after 50 epochs.Despite the potential of deep learning models to attain high accuracies, the computational complexity and slow runtimes makes this type of modeling unsuitable for this business objective.
 
 ## Analysis and Conclusion
 
-The random forest model using features chosen based on F values was the best model when it came to predicting the first booking destinations, making it the strongest base for a classifier that can scaled for production.
+The random forest model using features chosen based on random forest feature importances was the best model when it came to predicting the first booking destinations, making it the strongest base for a classifier that can scaled for production.
+It was able to predict the booking destination of users with a 97% accuracy.
 While other model types had potential to produce more accurate predictions, they had much higher runtimes, making them unfit to run larger amounts of data. By introducing more data to this modeling pipeline, it can be trained to yield even more accurate and consistent results.
 
 This classifier created by pairing the best supervised modeling technique and feature reduction method was built to be both accurate and scalable. Potential improvements in this product includes adding more features and further tuning of the model type. The accuracy of this model will most likely increase as it is trained with more data as well.
