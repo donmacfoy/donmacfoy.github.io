@@ -1,7 +1,7 @@
 ---
 layout: archive
 permalink: /tags/
-title: "Machine Learning Posts by Tags"
+title: "Project Posts by Tags"
 author_profile: true
 header:
 ---

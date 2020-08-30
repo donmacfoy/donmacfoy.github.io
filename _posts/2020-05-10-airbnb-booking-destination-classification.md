@@ -1,6 +1,6 @@
 ---
 title: "Comprehensive Modeling Analysis: Predicting Airbnb New User Bookings"
-date: 2019-10-02
+date: 2020-05-10
 tags: [machine learning, data science, classification, neural network]
 header:
   image: "/images/projects/airbnb-booking-destination-classification/airbnb.jpg"
