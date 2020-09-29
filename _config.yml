@@ -109,7 +109,7 @@ analytics:
 author:
   name             : "Don Macfoy"
   avatar           : "/images/profile_image.png" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "Data Science and Analytics"
+  bio              : 
   location         : "Los Angeles, CA"
   email            :
   links:
