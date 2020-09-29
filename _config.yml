@@ -110,7 +110,7 @@ author:
   name             : "Don Macfoy"
   avatar           : "/images/profile_image.png" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
   bio              : 
-  location         : "Los Angeles, CA"
+  location         : 
   email            :
   links:
     - label: "Email"
