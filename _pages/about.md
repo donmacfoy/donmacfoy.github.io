@@ -6,4 +6,4 @@ header:
 
 ---
 
-I’m an analytics professional with an undergraduate degree from USC in neuroscience. My technical competencies include Python, SQL, R, SAS and various business intelligence tools. My interest lies with combining my diverse knowledge base with my love of programming to make a meaningful impact on the world around me. I’m always open to working on new, exciting projects!
+I’m a U.S.C. neuroscience graduate with a background in healthcare, analytics, and research. My technical competencies include Python, SQL, R, SAS and various business intelligence tools. My interest lies in utilizing my diverse knowledge base to make a meaningful impact on the world around me. I’m always open to working on new, exciting projects! 
