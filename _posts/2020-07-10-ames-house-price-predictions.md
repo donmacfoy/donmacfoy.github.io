@@ -41,15 +41,12 @@ Modeling the Data
 
 ## Exploratory Data Analysis
 
-### Analyzing the Distribution of the Target Variable
-
 
 ![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/ames-house-price-predictions/output_17_0.png)
 
 
 The mean sale price is \$180,921 and the median sale price is \$163,000. The distribution of the sale prices is skewed to the right. A logarithmic transformation can be used to make the sale prices more normally distributed prior to modeling.
 
-### Identifying Statistically Significant Features
 
 
 
@@ -59,7 +56,6 @@ The mean sale price is \$180,921 and the median sale price is \$163,000. The dis
 
 The above plot displays the ten continuous features with the highest linear relationship to the sales price. The units used to describe this is the absolute value of the correlation coefficient (range 0 to 1). Variables with a correlation coefficient of .5 or higher have a strong linear relationship with the sales price (variables with lower correlation coefficients are not shown here).
 
-### Univariate Data Analysis
 
 
 ![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/ames-house-price-predictions/output_23_0.png)
@@ -67,7 +63,6 @@ The above plot displays the ten continuous features with the highest linear rela
 
 The above histograms display the distribution of the top features. The histograms are ordered based on the features' correlation to the sale price (most correlated to least correlated). As the correlation decreases, the distribution of the features have less of a resemblance to the distribution of the sale price.
 
-### Bivariate Data Analysis
 
 
 ![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/ames-house-price-predictions/output_26_0.png)
@@ -76,7 +71,6 @@ The above histograms display the distribution of the top features. The histogram
 The above scatterplots display the relationship of the top features to the sale price. The scatterplots are ordered based on the features' correlation to the sale price (most correlated to least correlated). As the correlation decreases, features display less of a linear relationship with sales price.
 
 
-### Multivariate Analysis of Key Features
 
 
 ![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/ames-house-price-predictions/output_31_0.png)
@@ -87,15 +81,10 @@ The above scatterplots display the paired relationship of the top features to th
 
 
 
-### Correlation of Variables
-
-
 ![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/ames-house-price-predictions/output_36_0.png)
 
 
 There are strong correlations among features that measure a similar quality of the homes (such as the year the house was built and year the garage was built).
-
-### Descriptive Statistics and Boxplots
 
 
 
