@@ -7,7 +7,7 @@ header:
 excerpt: "Supervised learning models predicted housing prices by utilizing multiple housing price indicators."
 ---
 
-<br>
+
 
 Housing prices have steadily increased over the course of the past three decades with the exception of severe economic downturns such as the economic recession of 2008.
 The housing market is not only a very strong economic indicator but it has a financial impact on anyone looking to own a home themselves.
@@ -17,7 +17,6 @@ By using machine learning techniques to do this the process can be automated to 
 
 In this study, several types of supervised learning classification models were used to predict housing prices in Ames, Iowa. Models focused on utilizing multiple housing price indicators, including factors related to the size and location of the living spaces. The different models were compared to better understand their ability to utilize the data to accurately predict the housing market using multiple forms of statistical evaluation. The process used to undertake this study is as follows:
 
-<br>
 
 Initiation and Data Preprocessing
 * Importing Packages and Files
@@ -282,7 +281,7 @@ Due to the prescence of outliers, the median (the colum denoted '50%') displays 
 
 
 
-![png](output_41_0.png)
+![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/ames-house-price-predictions/output_41_0.png)
 
 
 These boxplots, along with all of the other visualizations, can be used to uncover outliers prior to modeling. Notable outliers can be observed in the features associated with the spatial dimensions of the homes.
