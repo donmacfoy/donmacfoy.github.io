@@ -45,10 +45,10 @@ Modeling the Data
 ### Analyzing the Distribution of the Target Variable
 
 
-![png](output_17_0.png)
+![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/ames-house-price-predictions/output_17_0.png)
 
 
-The mean sale price is \\$180,921 and the median sale price is \\$163,000. The distribution of the sale prices is skewed to the right. A logarithmic transformation can be used to make the sale prices more normally distributed prior to modeling.
+The mean sale price is \$180,921 and the median sale price is \$163,000. The distribution of the sale prices is skewed to the right. A logarithmic transformation can be used to make the sale prices more normally distributed prior to modeling.
 
 ### Identifying Statistically Significant Features
 
@@ -97,11 +97,6 @@ The above scatterplots display the paired relationship of the top features to th
 There are strong correlations among features that measure a similar quality of the homes (such as the year the house was built and year the garage was built).
 
 ### Descriptive Statistics and Boxplots
-
-
-
-
-    Descriptive Statistics of Top Features
 
 
 
