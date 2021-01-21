@@ -279,8 +279,6 @@ There are strong correlations among features that measure a similar quality of t
 Due to the prescence of outliers, the median (the colum denoted '50%') displays information that is more representative of the data.
 
 
-
-
 ![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/ames-house-price-predictions/output_41_0.png)
 
 
