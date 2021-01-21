@@ -55,7 +55,7 @@ The mean sale price is \$180,921 and the median sale price is \$163,000. The dis
 
 
 
-![png](output_20_1.png)
+![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/ames-house-price-predictions/output_20_1.png)
 
 
 The above plot displays the ten continuous features with the highest linear relationship to the sales price. The units used to describe this is the absolute value of the correlation coefficient (range 0 to 1). Variables with a correlation coefficient of .5 or higher have a strong linear relationship with the sales price (variables with lower correlation coefficients are not shown here).
@@ -63,7 +63,7 @@ The above plot displays the ten continuous features with the highest linear rela
 ### Univariate Data Analysis
 
 
-![png](output_23_0.png)
+![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/ames-house-price-predictions/output_23_0.png)
 
 
 The above histograms display the distribution of the top features. The histograms are ordered based on the features' correlation to the sale price (most correlated to least correlated). As the correlation decreases, the distribution of the features have less of a resemblance to the distribution of the sale price.
@@ -71,7 +71,7 @@ The above histograms display the distribution of the top features. The histogram
 ### Bivariate Data Analysis
 
 
-![png](output_26_0.png)
+![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/ames-house-price-predictions/output_26_0.png)
 
 
 The above scatterplots display the relationship of the top features to the sale price. The scatterplots are ordered based on the features' correlation to the sale price (most correlated to least correlated). As the correlation decreases, features display less of a linear relationship with sales price.
@@ -80,7 +80,7 @@ The above scatterplots display the relationship of the top features to the sale 
 ### Multivariate Analysis of Key Features
 
 
-![png](output_31_0.png)
+![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/ames-house-price-predictions/output_31_0.png)
 
 
 The above scatterplots display the paired relationship of the top features to the sale price. The scatterplots are ordered based on the features' correlation to the sale price (most correlated to least correlated).
@@ -91,7 +91,7 @@ The above scatterplots display the paired relationship of the top features to th
 ### Correlation of Variables
 
 
-![png](output_36_0.png)
+![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/ames-house-price-predictions/output_36_0.png)
 
 
 There are strong correlations among features that measure a similar quality of the homes (such as the year the house was built and year the garage was built).
@@ -346,7 +346,7 @@ Models are evaluated by using the following metrics on the validation set: R-squ
 ## Creating Price Predictions For Unsold Homes
 
 
-![png](output_69_0.png)
+![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/ames-house-price-predictions/output_69_0.png)
 
 
 The best performing model (the predictive linear regression model) was used to predict the sale prices of unsold homes.
