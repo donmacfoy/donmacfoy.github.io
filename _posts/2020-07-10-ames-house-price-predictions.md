@@ -3,7 +3,7 @@ title: "Regression Analysis: Predicting Ames Housing Market Prices"
 date: 2020-07-10
 tags: [machine learning, data science, regression]
 header:
-  image: "/images/projects/regression-melbourne-housing/melbourne.jpg"
+  image: "/images/projects/ames-house-price-predictions/ames.jpg"
 excerpt: "Supervised learning models predicted housing prices by utilizing multiple housing price indicators."
 ---
 
