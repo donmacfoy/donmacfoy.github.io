@@ -17,6 +17,7 @@ By using machine learning techniques to do this the process can be automated to 
 
 In this study, several types of supervised learning classification models were used to predict housing prices in Ames, Iowa. Models focused on utilizing multiple housing price indicators, including factors related to the size and location of the living spaces. The different models were compared to better understand their ability to utilize the data to accurately predict the housing market using multiple forms of statistical evaluation. The process used to undertake this study is as follows:
 
+<br>
 
 Initiation and Data Preprocessing
 * Importing Packages and Files
@@ -24,23 +25,23 @@ Initiation and Data Preprocessing
 * Data Exploration and Cleaning
 
 Exploratory Data Analysis
-* Analyzing the Distribution of the Target Variable
-* Checking the Range of the Classes
-* Interpreting Descriptive Statistics
+* Identifying Statistically Significant Features
+* Univariate, Bivariate, and Multivariate Analysis
+* Analyzing the Relationship Between the Variables
+* Descriptive Statistics and Boxplots
 
-Preparing The Data For Modeling
-* Imputing Outliers
-* Normalization Linear Transformations
-* Feature Selection
-
-Modeling the Data
-1. Using All Available Features
-2. Using PCA Components
-3. Using Selectkbest Function
+Predictive Modeling and Evaluation
+* Data Preprocessing
+* Lasso Regression
+* Elastic Net Regression
+* Random Forests
+* Gradient Boost
+* Creating Price Predictions
 
 
 ## Exploratory Data Analysis
 
+Dataset used for this study includes information about home purchases in Ames pertaining to their physical qualities and how they were sold. Such information includes: the location of the homes, the spatial dimensions of the homes, and the methods in which the homes were sold.
 
 ![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/ames-house-price-predictions/output_17_0.png)
 
@@ -73,10 +74,10 @@ The above scatterplots display the relationship of the top features to the sale 
 
 
 
-![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/ames-house-price-predictions/output_31_0.png)
+![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/ames-house-price-predictions/output_33_0.png)
 
 
-The above scatterplots display the paired relationship of the top features to the sale price. The scatterplots are ordered based on the features' correlation to the sale price (most correlated to least correlated).
+With the exception of a couple of outliers, quality rating and above grade living area when paired together have a strong linear relationship with sale price.
 
 
 
@@ -125,7 +126,7 @@ There are strong correlations among features that measure a similar quality of t
       <td>2.0</td>
       <td>5.0</td>
       <td>6.0</td>
-      <td>7.00</td>
+      <td>7.0</td>
       <td>10.0</td>
     </tr>
     <tr>
@@ -136,7 +137,7 @@ There are strong correlations among features that measure a similar quality of t
       <td>438.0</td>
       <td>1164.0</td>
       <td>1480.0</td>
-      <td>1779.00</td>
+      <td>1779.0</td>
       <td>5642.0</td>
     </tr>
     <tr>
@@ -147,7 +148,7 @@ There are strong correlations among features that measure a similar quality of t
       <td>1.0</td>
       <td>1.0</td>
       <td>2.0</td>
-      <td>2.00</td>
+      <td>2.0</td>
       <td>4.0</td>
     </tr>
     <tr>
@@ -158,7 +159,7 @@ There are strong correlations among features that measure a similar quality of t
       <td>160.0</td>
       <td>360.0</td>
       <td>484.0</td>
-      <td>602.50</td>
+      <td>602.5</td>
       <td>1418.0</td>
     </tr>
     <tr>
@@ -169,7 +170,7 @@ There are strong correlations among features that measure a similar quality of t
       <td>105.0</td>
       <td>816.0</td>
       <td>1023.0</td>
-      <td>1345.50</td>
+      <td>1345.5</td>
       <td>6110.0</td>
     </tr>
     <tr>
@@ -180,74 +181,8 @@ There are strong correlations among features that measure a similar quality of t
       <td>438.0</td>
       <td>894.0</td>
       <td>1097.0</td>
-      <td>1413.50</td>
+      <td>1413.5</td>
       <td>4692.0</td>
-    </tr>
-    <tr>
-      <th>FullBath</th>
-      <td>1094.0</td>
-      <td>1.577697</td>
-      <td>0.550219</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>2.0</td>
-      <td>2.00</td>
-      <td>3.0</td>
-    </tr>
-    <tr>
-      <th>TotRmsAbvGrd</th>
-      <td>1094.0</td>
-      <td>6.570384</td>
-      <td>1.584486</td>
-      <td>3.0</td>
-      <td>5.0</td>
-      <td>6.0</td>
-      <td>7.00</td>
-      <td>12.0</td>
-    </tr>
-    <tr>
-      <th>YearBuilt</th>
-      <td>1094.0</td>
-      <td>1972.412249</td>
-      <td>31.189752</td>
-      <td>1880.0</td>
-      <td>1953.0</td>
-      <td>1975.0</td>
-      <td>2003.00</td>
-      <td>2010.0</td>
-    </tr>
-    <tr>
-      <th>YearRemodAdd</th>
-      <td>1094.0</td>
-      <td>1985.915905</td>
-      <td>20.930772</td>
-      <td>1950.0</td>
-      <td>1967.0</td>
-      <td>1995.0</td>
-      <td>2005.00</td>
-      <td>2010.0</td>
-    </tr>
-    <tr>
-      <th>GarageYrBlt</th>
-      <td>1094.0</td>
-      <td>1978.565814</td>
-      <td>25.934444</td>
-      <td>1900.0</td>
-      <td>1960.0</td>
-      <td>1982.0</td>
-      <td>2003.00</td>
-      <td>2010.0</td>
-    </tr>
-    <tr>
-      <th>MasVnrArea</th>
-      <td>1094.0</td>
-      <td>109.855576</td>
-      <td>190.667459</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>171.75</td>
-      <td>1600.0</td>
     </tr>
     <tr>
       <th>SalePrice</th>
@@ -257,7 +192,7 @@ There are strong correlations among features that measure a similar quality of t
       <td>35311.0</td>
       <td>132500.0</td>
       <td>165750.0</td>
-      <td>221000.00</td>
+      <td>221000.0</td>
       <td>755000.0</td>
     </tr>
   </tbody>
@@ -265,77 +200,40 @@ There are strong correlations among features that measure a similar quality of t
 </div>
 
 
-Due to the prescence of outliers, the median (the colum denoted '50%') displays information that is more representative of the data.
 
+Due to the presence of outliers, the median (the column denoted '50%') displays information that is more representative of the data.
 
-![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/ames-house-price-predictions/output_41_0.png)
-
-
-These boxplots, along with all of the other visualizations, can be used to uncover outliers prior to modeling. Notable outliers can be observed in the features associated with the spatial dimensions of the homes.
 
 ## Predictive Modeling and Evaluation
 
 Models are evaluated by using the following metrics on the validation set: R-squared value, root mean square error, and mean absolute error. Additionally, the residuals from the validation set are plotted and analyzed.
 
 
-### Linear Regression (Predictive)
+### Gradient Boost
 
 
 
     Validation Set Evaluation
 
     R squared score:
-    0.8937420137868703
+    0.9172114815362296
 
-    RMSE: 24990.84774368596
+    RMSE: 22058.97119044775
 
-    MAE: 17603.94990048896
-
-
+    MAE: 14769.614705646483
 
 
-### K Nearest Neighbors
+The gradient boost model had the best performance out of all of the models. Cross validation showed fewer signs of overfitting with this model. The strength of this model when it comes to making predictions using this data comes from its ability to reduce error over multiple iterations, resulting in higher accuracy scores after a high number of iterations.
 
 
 
-    Validation Set Evaluation
-
-    R squared score:
-    0.8461546705188671
-
-    RMSE: 30070.618178354798
-
-    MAE: 19883.733789954338
-
-    CPU times: user 1.08 s, sys: 279 ms, total: 1.35 s
-    Wall time: 408 ms
+### Creating Price Predictions For Unsold Homes
 
 
+![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/ames-house-price-predictions/output_76_0.png)
 
 
-### Random Forest
-
-
-
-    Validation Set Evaluation
-
-    R squared score:
-    0.8929342828451408
-
-    RMSE: 25085.653158110843
-
-    MAE: 16939.827465753424
-
-
-
-
-## Creating Price Predictions For Unsold Homes
-
-
-![png](https://raw.githubusercontent.com/donmacfoy/donmacfoy.github.io/master/images/projects/ames-house-price-predictions/output_69_0.png)
-
-
-The best performing model (the predictive linear regression model) was used to predict the sale prices of unsold homes.
+The gradient boosting model was used to predict the sale prices of unsold homes. The predicted sale prices, have a similar distribution to the known sale prices. Most of the homes that have yet to be sold will likely be sold for around $150,000.
 
 ## Final Analysis and Conclusion
 
